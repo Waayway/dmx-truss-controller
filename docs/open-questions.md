@@ -24,7 +24,7 @@ Nothing here is blocking the first test, but each item can change a number in th
 - **MAX485 module** may have a 120 ohm resistor already; not checked. The fixtures' own termination switches are unchecked. The terminator plug still goes in the last lamp.
 - **D12 (GPIO47)** is assumed silent at boot while D1 (GPIO43) may print; untested.
 - **MT6701 module pin names** (SSI) not seen.
-- **Touch INT.** Plan v4.5 leaves it unwired; an earlier pin plan reserved A6.
+- **Touch INT.** Plan v4.6 leaves it unwired; an earlier pin plan reserved A6.
 
 ## Shopping
 
@@ -37,7 +37,7 @@ Nothing here is blocking the first test, but each item can change a number in th
 
 - Final base with both D-size jacks (XLR on one facet, USB-C opposite) needs about 28 to 30 mm depth and a board of about 60 x 45 mm. Not modelled; waits for the Neutrik jack.
 - 45 degree desk wedge not modelled yet.
-- Plan v4.5 section 7 still shows the older slot-and-clamp drawing.
+- Plan v4.6 section 7 still shows the older slot-and-clamp drawing.
 
 ## Firmware
 

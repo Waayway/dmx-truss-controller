@@ -17,7 +17,7 @@ The schematic image is in [`docs/images/schematic.png`](../docs/images/schematic
 | TP_SCL | A5 (12) |
 | VCC | 3V3 (must be 3.3 V: the module's level shifter follows its supply) |
 | GND | GND |
-| MISO, TP_INT, TP_RST | not connected in plans v4.4 and v4.5 (an earlier pin plan reserved A6 for TP_INT) |
+| MISO, TP_INT, TP_RST | not connected in plans v4.4 to v4.6 (an earlier pin plan reserved A6 for TP_INT) |
 
 ## MT6701 angle sensor (I2C)
 

@@ -1,4 +1,4 @@
-**Status: v4.5 DRAFT. Same as v4.4 with the Conrad link for the Neutrik USB-C jack corrected (v4.4 had a wrong address). BOM agreed (v4.2); Neutrik jack added at your request. The section 7 drawing still shows the older slot-and-clamp idea; the OpenSCAD models in the repo are newer. Not agreed. Nothing ordered.** Schematic, wiring, bill of materials and a first look at the housing for the 1.28 inch design.
+**Status: v4.6 DRAFT. Same as v4.5 with the MAX485 module moved from Otronic to HobbyElectronica (Otronic has a EUR 5.00 minimum order). BOM agreed (v4.2); Neutrik jack added at your request. The section 7 drawing still shows the older slot-and-clamp idea; the OpenSCAD models in the repo are newer. Not agreed. Nothing ordered.** Schematic, wiring, bill of materials and a first look at the housing for the 1.28 inch design.
 
 # 1. Three corrections to v4.0
 
@@ -89,27 +89,27 @@ Prices in EUR incl. VAT. Shipping not included. Stock was read from each shop's 
 | 40-pin header strip 2.54 mm | 1 | 0.96 | 0.96 | in stock | [kiwi-electronics.com](https://www.kiwi-electronics.com/en/40-pin-header-strip-2-54mm-pitch-4100) |
 | **Kiwi subtotal** | | | **97.35** | | |
 
-## Other shops (one of each; the Conrad row is new)
+## Other shops
 
 | Part | Shop | Total | Stock | Link |
 |------------------------|--------------------|-------|----------------|------------------|
 | Waveshare 1.28 inch Touch LCD module | BerryBase (DE) | 19.90 | limited availability | [berrybase.de](https://www.berrybase.de/en/waveshare-1.28-round-ips-display-module-capacitive-touch-lcd-240-240-ips-spi-and-i2c-io-pins) |
 | MT6701 angle sensor module, I2C | Hobby-Electronica (NL) | 3.95 | in stock | [hobbyelectronica.nl](https://www.hobbyelectronica.nl/en/product/mt6701-14-bit-hoeksensor-i2c) |
-| MAX485 TTL to RS485 module | Otronic (NL) | 1.15 | in stock | [otronic.nl](https://www.otronic.nl/en/max485-ttl-to-rs485-converter-module) |
+| MAX485 TTL to RS485 module (was Otronic EUR 1.15, but Otronic wants EUR 5.00 minimum) | Hobby-Electronica (NL) | 1.95 | in stock | [hobbyelectronica.nl](https://www.hobbyelectronica.nl/product/max485-module-voor-rs485-communicatie/) |
 | Neutrik NC3 FD-LX XLR panel jack | Thomann (DE) | 4.50 | in stock | [thomann.de](https://www.thomann.de/de/neutrik_nc3_fd_lx.htm) |
 | Stairville DMX terminator plug (for the last lamp) | Thomann (DE) | 4.90 | in stock | [thomann.de](https://www.thomann.de/de/stairville_dmx_endstecker_xlr_3pol.htm) |
 | **Neutrik NAUSBC-5G-FL10**, D-size USB-C panel jack with 10 cm cable and plug | Conrad (DE) | 11.99 | "available soon" (not in stock, backorder) | [conrad.de](https://www.conrad.de/de/p/neutrik-usb-c-kabel-usb-c-buchse-usb-c-stecker-10-cm-schwarz-flammwidrig-nausbc-5g-fl10-3863079.html) |
 
 ## Total
 
-- **Core parts** (Nano, display, motor, TMC6300, MT6701, MAX485, XLR jack, USB-C jack): **EUR 136.92**
-- **Plus capacitor and headers:** EUR 138.84
-- **Plus terminator plug:** **EUR 143.74**
-- **Shipping:** not included. Kiwi, if you ship to NL: letterbox parcel EUR 4.22, parcel EUR 7.20 (free from EUR 150, which this order does not reach). BerryBase, HobbyElectronica, Otronic and Thomann: not checked.
+- **Core parts** (Nano, display, motor, TMC6300, MT6701, MAX485, XLR jack, USB-C jack): **EUR 137.72**
+- **Plus capacitor and headers:** EUR 139.64
+- **Plus terminator plug:** **EUR 144.54**
+- **Shipping:** not included. Kiwi, if you ship to NL: letterbox parcel EUR 4.22, parcel EUR 7.20 (free from EUR 150, which this order does not reach). HobbyElectronica (NL): EUR 3.45 under EUR 25, free from EUR 45 (the MT6701 plus the MAX485 is EUR 5.90). BerryBase and Thomann: not checked.
 
 ## About the Neutrik USB-C jack
 
-- **Where:** none of the five shops on the list carry it. Kiwi, Thomann and BerryBase have no listing; HobbyElectronica and Otronic I could not search. Conrad is the only shop I found, so the BOM is now six shops.
+- **Where:** none of the other shops on the list carry it. Kiwi, Thomann and BerryBase have no listing; HobbyElectronica I could not search. Conrad is the only shop I found, so the BOM has five shops: Kiwi, BerryBase, HobbyElectronica, Thomann and Conrad.
 - **Price:** EUR 11.99 incl. VAT on conrad.de, EUR 12.99 on conrad.com. The FL15 and FL25 versions are listed at Conrad too, but I did not read their price.
 - **Stock:** Conrad says "Bald verfuegbar" with "order now, receive later", so it is not in stock today. Conrad blocks my page reads, so this is from a search snippet.
 - **Length:** the 10 cm lead is enough if the Nano sits next to the jack; FL15 gives more slack.
@@ -119,7 +119,7 @@ Prices in EUR incl. VAT. Shipping not included. Stock was read from each shop's 
 
 - **USB-C supply:** you already own one (5 V, 3 A).
 - **30 AWG wire:** the display ships with a 13-pin cable that may do the job. Check it first.
-- **100 nF capacitors (optional):** only a 450-piece kit at Kiwi. Add two if HobbyElectronica or Otronic sell them; I have not checked.
+- **100 nF capacitors (optional):** only a 450-piece kit at Kiwi. Add two if HobbyElectronica sells them; I have not checked.
 - **Perfboard, screws, PETG, DMX cable:** you have these.
 
 
@@ -130,7 +130,7 @@ Prices in EUR incl. VAT. Shipping not included. Stock was read from each shop's 
 3. **MT6701 module pins.** The listing says I2C; I have not seen the pin names.
 4. **Display cable.** Waveshare lists a 13-pin GH1.25 cable in the box. I have not seen what BerryBase ships, or whether the far end is bare or a plug.
 5. **Both chips on one I2C bus.** The CST816S answers at 0x15 and the MT6701 at 0x06 per their documents. Not tested.
-6. **MAX485 module.** Some have a 120 ohm resistor built in. The Otronic listing does not say. A and B labels differ between makers, so swapping them may be needed.
+6. **MAX485 module.** Some have a 120 ohm resistor built in. The HobbyElectronica listing does not say. A and B labels differ between makers, so swapping them may be needed.
 7. **DMX termination.** The terminator belongs in the last lamp, not in this box. Some lamps may have a built-in switch; not checked.
 8. **Motor poles.** The SparkFun datasheet says 8 magnetic poles, SmartKnob's firmware assumes 14. Check before firmware.
 9. **DMX on D12.** Moved from D1 because D1 is the hardware UART TX. That is my reasoning and is not tested.

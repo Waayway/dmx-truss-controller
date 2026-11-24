@@ -15,7 +15,7 @@ SmartKnob-style: a **fixed round touch display** with a **ring around it that tu
 | [`bom/`](bom) | Bill of materials: `bom.csv` (source of truth) and generated `BOM.md` with every buy link |
 | [`hardware/`](hardware) | [Pinout and wiring](hardware/pinout.md), [screws and hardware](hardware/screws.md), schematic source |
 | [`cad/`](cad) | OpenSCAD models, exported STL files, [print notes](cad/README.md) |
-| [`docs/`](docs) | Plan v4.5 (PDF + markdown), schematic and concept images, [open questions](docs/open-questions.md) |
+| [`docs/`](docs) | Plan v4.6 (PDF + markdown), schematic and concept images, [open questions](docs/open-questions.md) |
 | [`scripts/`](scripts) | BOM generator and the clearance check |
 
 ## Rules this design follows
@@ -41,4 +41,4 @@ OpenSCAD is not installed on the host this was made on; the commands above were 
 
 ## Plan documents
 
-[`docs/plan-v4.5.pdf`](docs/plan-v4.5.pdf) (same content as [`docs/plan-v4.5.md`](docs/plan-v4.5.md)). Its section 7 housing drawing shows the older slot-and-clamp concept; the CAD in `cad/` is newer.
+[`docs/plan-v4.6.pdf`](docs/plan-v4.6.pdf) (same content as [`docs/plan-v4.6.md`](docs/plan-v4.6.md)). Its section 7 housing drawing shows the older slot-and-clamp concept; the CAD in `cad/` is newer.

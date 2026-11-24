@@ -12,7 +12,7 @@ Stock was read from each shop's own product page on 2026-11-24 unless noted. Re-
 | - | 40-pin header strip 2.54 mm | 1 | Kiwi Electronics | 0.96 | in stock (page JSON-LD 2026-11-24) | <https://www.kiwi-electronics.com/en/40-pin-header-strip-2-54mm-pitch-4100> |
 | U4 | Waveshare 1.28in Touch LCD module (GC9A01 + CST816S) | 1 | BerryBase | 19.90 | limited availability (page JSON-LD 2026-11-24) | <https://www.berrybase.de/en/waveshare-1.28-round-ips-display-module-capacitive-touch-lcd-240-240-ips-spi-and-i2c-io-pins> |
 | U3 | MT6701 14-bit angle sensor module I2C | 1 | HobbyElectronica | 3.95 | in stock (page JSON-LD 2026-11-24) | <https://www.hobbyelectronica.nl/en/product/mt6701-14-bit-hoeksensor-i2c> |
-| U5 | MAX485 TTL to RS485 module | 1 | Otronic | 1.15 | in stock (page JSON-LD 2026-11-24) | <https://www.otronic.nl/en/max485-ttl-to-rs485-converter-module> |
+| U5 | MAX485 TTL to RS485 module | 1 | HobbyElectronica | 1.95 | in stock (page JSON-LD 2026-11-24) | <https://www.hobbyelectronica.nl/product/max485-module-voor-rs485-communicatie/> |
 | J2 | Neutrik NC3FD-LX XLR 3-pin female panel jack | 1 | Thomann | 4.50 | in stock (page 2026-11-24) | <https://www.thomann.de/de/neutrik_nc3_fd_lx.htm> |
 | T1 | Stairville DMX terminator plug (XLR male) | 1 | Thomann | 4.90 | in stock (page 2026-11-24) | <https://www.thomann.de/de/stairville_dmx_endstecker_xlr_3pol.htm> |
 | J1 | Neutrik NAUSBC-5G-FL10 USB-C D-size panel jack with 10 cm cable | 1 | Conrad | 11.99 | backorder "Bald verfuegbar" (search snippets only; Conrad blocks page reads; a second snippet showed EUR 10.99 so 11.99 is the cautious figure) | <https://www.conrad.de/de/p/neutrik-usb-c-kabel-usb-c-buchse-usb-c-stecker-10-cm-schwarz-flammwidrig-nausbc-5g-fl10-3863079.html> |
@@ -21,15 +21,14 @@ Stock was read from each shop's own product page on 2026-11-24 unless noted. Re-
 
 ## Totals
 
-- **Everything on the list:** EUR 143.74
-- **First test only** (no XLR panel jack, no USB-C panel jack, no terminator; USB-C cable straight into the Nano): EUR 122.35
+- **Everything on the list:** EUR 144.54
+- **First test only** (no XLR panel jack, no USB-C panel jack, no terminator; USB-C cable straight into the Nano): EUR 123.15
 
 ### By shop
 
 - Kiwi Electronics: EUR 97.35
 - BerryBase: EUR 19.90
-- HobbyElectronica: EUR 3.95
-- Otronic: EUR 1.15
+- HobbyElectronica: EUR 5.90
 - Thomann: EUR 9.40
 - Conrad: EUR 11.99
 
@@ -42,7 +41,7 @@ Stock was read from each shop's own product page on 2026-11-24 unless noted. Re-
 - **-** MALE pin strip (pins 11.6 mm long); snap off pieces. For modules that arrive without pins (check the MT6701 and MAX485 and TMC6300 listings). It is NOT a socket. The Nano with headers already has its own pins
 - **U4** Comes with a 13-pin GH1.25 cable per Waveshare
 - **U3** Pin names not yet seen
-- **U5** Check for a built-in 120 ohm resistor
+- **U5** Check for a built-in 120 ohm resistor (listing does not say). Same shop as the MT6701. Moved here from Otronic (EUR 1.15 but EUR 5.00 minimum order)
 - **J2** D-size: 24 mm hole; 24.1 mm deep behind the panel. FINAL housing only
 - **T1** Goes in the DMX out of the LAST lamp. Skip if you own one
 - **J1** FINAL housing only. First test: USB-C cable straight into the Nano. FL15 (25 cm lead) is the slack option; price not read
