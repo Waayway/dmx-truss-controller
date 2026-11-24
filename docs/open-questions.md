@@ -42,3 +42,8 @@ Nothing here is blocking the first test, but each item can change a number in th
 ## Firmware
 
 Not started. Plan: ESP32 Arduino core, SimpleFOC for detents, LVGL for the UI, `esp_dmx` for DMX out (24 slots), LittleFS for presets, web page for labels and patching.
+
+## Header strip and Nano mounting (added after review)
+
+- The 40-pin strip in the BOM is a male pin strip, not a socket. The CAD stack-up in `cad/base_usbc.scad` assumes the Nano sits about 2 mm above the perfboard on low sockets. If you solder the Nano's own pins straight into the board instead, it sits about 2.5 mm above the board; the slot assert still passes (plug axis about 13.2 mm, slot top about 18.2 mm, front plate at 19.5 mm), but re-run `make` after changing `sock_h`/`pin_in`.
+- It is not confirmed whether the MT6701, MAX485 and TMC6300 modules ship with pins fitted.
