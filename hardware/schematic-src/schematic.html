@@ -1,0 +1,155 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Schematic</title><style>html,body{margin:0;background:#fff}</style></head><body>
+<svg id="s" xmlns="http://www.w3.org/2000/svg" width="2060" height="1300" viewBox="0 0 2060 1300" font-family="Helvetica, Arial, sans-serif"></svg>
+<script>
+const C = {spi:'#1f6fd1', i2c:'#16915a', pwm:'#e07a10', dmx:'#8a3fc2', pwr:'#d62f2f', gnd:'#222', box:'#222', mut:'#6a727c'};
+let o = '';
+const P = 36, Y0 = 196;
+const ry = i => Y0 + P*i;
+function line(x1,y1,x2,y2,c='#222',w=2.6,d=''){ o += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" ${d?`stroke-dasharray="${d}"`:''}/>`; }
+function poly(pts,c,w=2.6){ o += `<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"/>`; }
+function dot(x,y,c='#222'){ o += `<circle cx="${x}" cy="${y}" r="5.5" fill="${c}"/>`; }
+function text(x,y,t,sz=18,w=400,c='#1b1f24',a='start'){ o += `<text x="${x}" y="${y}" font-size="${sz}" font-weight="${w}" fill="${c}" text-anchor="${a}">${t}</text>`; }
+function box(x,y,w,h,title,sub,fill='#f6f8fa'){
+  o += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="${fill}" stroke="${C.box}" stroke-width="2.4"/>`;
+  text(x+w/2, y+30, title, 21, 700, '#111', 'middle'); if(sub) text(x+w/2, y+52, sub, 15, 400, '#555', 'middle');
+}
+// pin: side 'L' or 'R' of box edge x, row y. label inside box, optional gpio grey
+function pin(edgeX, y, side, label, gpio){
+  if(side==='L'){ text(edgeX+10, y+6, label, 17, 600); if(gpio) text(edgeX+10+label.length*10.6+8, y+6, gpio, 13, 400, '#888'); }
+  else { text(edgeX-10, y+6, label, 17, 600, '#1b1f24','end'); if(gpio) text(edgeX-10-label.length*10.6-8, y+6, gpio, 13, 400, '#888','end'); }
+}
+function flag(x,y,kind,dir){ // stub from pin to flag; dir -1 left, +1 right
+  if(kind==='gnd'){ line(x,y,x+dir*30,y,C.gnd); const gx = x+dir*30; line(gx,y,gx,y+12,C.gnd); line(gx-12,y+12,gx+12,y+12,C.gnd); line(gx-8,y+18,gx+8,y+18,C.gnd); line(gx-4,y+24,gx+4,y+24,C.gnd); }
+  else { const lab = kind==='3v3' ? '+3V3' : '+5V'; line(x,y,x+dir*34,y,C.pwr); const gx=x+dir*34; line(gx,y-12,gx,y+12,C.pwr); text(gx+dir*8, y+6, lab, 16, 700, C.pwr, dir<0?'end':'start'); }
+}
+function gndsym(x,y){ line(x,y,x,y+10,C.gnd); line(x-13,y+10,x+13,y+10,C.gnd); line(x-8,y+16,x+8,y+16,C.gnd); line(x-4,y+22,x+4,y+22,C.gnd); }
+function v5flag(x,y){ line(x,y,x,y-22,C.pwr); line(x-12,y-22,x+12,y-22,C.pwr); text(x,y-30,'+5V',16,700,C.pwr,'middle'); }
+
+text(40, 46, 'DMX truss controller: electronics schematic (v1 draft, not agreed, nothing ordered)', 28, 700);
+text(40, 74, 'One Arduino Nano ESP32 runs everything. Wire colours: blue = display SPI, green = I2C, orange = motor PWM, purple = DMX, red = +5 V / +3.3 V, black = ground.', 16, 400, '#555');
+
+/* ---------------- NANO ---------------- */
+const NX = 760, NW = 300, NY = 100;
+box(NX, NY, NW, ry(9)+60-NY, 'Arduino Nano ESP32', 'ESP32-S3, GPIO number in grey');
+// left pins
+const L = [['D13 / SCK','48'],['D11 / MOSI','38'],['D10 / CS','21'],['D9','18'],['D8','17'],['D7','10'],['A4 / SDA','11'],['A5 / SCL','12']];
+L.forEach((p,i)=>pin(NX, ry(i), 'L', p[0], 'GPIO'+p[1]));
+pin(NX, ry(8), 'L', '3V3'); pin(NX, ry(9), 'L', 'GND');
+// right pins
+const R = [['D2','5'],['D3','6'],['D4','7'],['D5','8'],['D6','9'],['A0','1'],['A1','2'],['D12','47']];
+R.forEach((p,i)=>pin(NX+NW, ry(i), 'R', p[0], 'GPIO'+p[1]));
+pin(NX+NW, ry(8), 'R', 'VBUS (5 V)'); pin(NX+NW, ry(9), 'R', 'GND');
+flag(NX, ry(8), '3v3', -1); flag(NX, ry(9), 'gnd', -1);
+flag(NX+NW, ry(8), '5v', 1); flag(NX+NW, ry(9), 'gnd', 1);
+// USB-C on the nano
+o += `<rect x="${NX+NW/2-45}" y="${ry(9)+60}" width="90" height="26" rx="6" fill="#d9dde2" stroke="#222" stroke-width="2.4"/>`;
+text(NX+NW/2, ry(9)+78, 'USB-C', 15, 700, '#222', 'middle');
+
+/* ---------------- DISPLAY ---------------- */
+const DX = 80, DW = 300;
+box(DX, 100, DW, ry(12)+40-100, 'Waveshare 1.28" touch LCD', 'GC9A01 + CST816S, fixed');
+const D = ['SCLK','MOSI','LCD_CS','LCD_DC','LCD_RST','LCD_BL','TP_SDA','TP_SCL'];
+D.forEach((n,i)=>pin(DX+DW, ry(i), 'R', n));
+pin(DX+DW, ry(8), 'R', 'VCC (3.3 V)'); pin(DX+DW, ry(9), 'R', 'GND');
+pin(DX+DW, ry(10), 'R', 'MISO  (not used)'); pin(DX+DW, ry(11), 'R', 'TP_INT (not used)'); pin(DX+DW, ry(12), 'R', 'TP_RST (not used)');
+flag(DX+DW, ry(8), '3v3', 1); flag(DX+DW, ry(9), 'gnd', 1);
+// wires display -> nano
+const col = i => (i<6)?C.spi:C.i2c;
+for(let i=0;i<8;i++) line(DX+DW, ry(i), NX, ry(i), col(i), 3);
+// junction dots for I2C taps
+const SDAX = 500, SCLX = 545;
+dot(SDAX, ry(6), C.i2c); dot(SCLX, ry(7), C.i2c);
+
+/* ---------------- MT6701 ---------------- */
+const MY = 700;
+box(DX, MY, DW, 240, 'MT6701 sensor module', 'I2C 0x06, behind the motor magnet');
+pin(DX+DW, MY+100, 'R', 'SDA'); pin(DX+DW, MY+136, 'R', 'SCL'); pin(DX+DW, MY+172, 'R', 'VCC (3.3 V)'); pin(DX+DW, MY+208-0, 'R', '');
+text(DX+DW-10, MY+208, 'GND', 17, 600, '#1b1f24', 'end');
+poly([[SDAX, ry(6)],[SDAX, MY+100],[DX+DW, MY+100]], C.i2c, 3);
+poly([[SCLX, ry(7)],[SCLX, MY+136],[DX+DW, MY+136]], C.i2c, 3);
+flag(DX+DW, MY+172, '3v3', 1); flag(DX+DW, MY+208, 'gnd', 1);
+
+/* ---------------- TMC6300 ---------------- */
+const TX = 1400, TW = 300;
+box(TX, 100, TW, ry(9)+40-100, 'TMC6300 motor driver', 'SparkFun ROB-21867, 6-PWM mode');
+const T = ['UH','UL','VH','VL','WH','WL'];
+T.forEach((n,i)=>pin(TX, ry(i), 'L', n));
+pin(TX, ry(6), 'L', 'VIO (enable)'); pin(TX, ry(8), 'L', 'VIN (5 V)'); pin(TX, ry(9), 'L', 'GND');
+pin(TX+TW, ry(0), 'R', 'U'); pin(TX+TW, ry(1), 'R', 'V'); pin(TX+TW, ry(2), 'R', 'W');
+for(let i=0;i<7;i++) line(NX+NW, ry(i), TX, ry(i), i<6?C.pwm:C.pwr, 3);
+v5flag(TX-60, ry(8)); line(TX-60, ry(8), TX, ry(8), C.pwr, 3); // VIN
+flag(TX, ry(9), 'gnd', -1);
+// label on enable wire
+text((NX+NW+TX)/2, ry(6)-8, 'enable: low = driver off', 14, 400, C.pwr, 'middle');
+
+/* ---------------- MOTOR ---------------- */
+const MX = 1840, MW = 180;
+box(MX, 100, MW, 210, 'Gimbal motor', 'SparkFun ROB-20441');
+pin(MX, ry(0), 'L', 'U'); pin(MX, ry(1), 'L', 'V'); pin(MX, ry(2), 'L', 'W');
+for(let i=0;i<3;i++) line(TX+TW, ry(i), MX, ry(i), C.pwm, 3);
+text(MX+MW/2, ry(2)+62, 'magnet on rotor', 14, 400, '#555', 'middle');
+
+/* ---------------- DECOUPLING ---------------- */
+const dx0 = TX+20, dy0 = ry(9)+90;
+text(TX, dy0-30, 'Capacitors, right at the TMC6300 VIN and GND pins:', 15, 600, '#333');
+function cap(x,y,lab){ line(x,y,x,y+20,C.pwr,3); line(x-16,y+20,x+16,y+20,'#222',3.4); line(x-16,y+28,x+16,y+28,'#222',3.4); line(x,y+28,x,y+48,C.gnd,3); gndsym(x,y+48); text(x+24, y+30, lab, 15, 600); }
+v5flag(dx0+20, dy0+30); line(dx0+20, dy0+30, dx0+20+0, dy0+30);
+// bus line connecting caps
+line(dx0+20, dy0+30, dx0+210, dy0+30, C.pwr, 3);
+cap(dx0+20, dy0+30, 'C1 470 uF'); cap(dx0+210, dy0+30, 'C2 100 nF');
+text(dx0+20, dy0+30-0, '', 1);
+
+/* ---------------- MAX485 ---------------- */
+const XY = 810;
+box(TX, XY, TW, 290, 'MAX485 module', 'RS-485 line driver for DMX');
+const my = i => XY+78+P*i;
+pin(TX, my(0), 'L', 'DI'); pin(TX, my(1), 'L', 'RE'); pin(TX, my(2), 'L', 'DE'); pin(TX, my(3), 'L', 'RO (not used)'); pin(TX, my(4), 'L', 'VCC (5 V)'); pin(TX, my(5), 'L', 'GND');
+pin(TX+TW, my(0), 'R', 'A'); pin(TX+TW, my(1), 'R', 'B');
+// DI wire from D12
+poly([[NX+NW, ry(7)],[1140, ry(7)],[1140, my(0)],[TX, my(0)]], C.dmx, 3);
+text(1150, 700, 'DMX data (UART TX)', 14, 400, C.dmx);
+// RE+DE tied to +5V
+line(TX, my(1), TX-40, my(1), C.pwr, 3); line(TX, my(2), TX-40, my(2), C.pwr, 3); line(TX-40, my(1), TX-40, my(2), C.pwr, 3);
+dot(TX-40, my(1)+P/2, C.pwr); line(TX-40, my(1)+P/2, TX-70, my(1)+P/2, C.pwr, 3); line(TX-70, my(1)+P/2-12, TX-70, my(1)+P/2+12, C.pwr, 3); text(TX-78, my(1)+P/2+6, '+5V', 16, 700, C.pwr, 'end');
+flag(TX, my(4), '5v', -1); flag(TX, my(5), 'gnd', -1);
+
+/* ---------------- XLR ---------------- */
+const XX = 1840, XW = 180;
+box(XX, XY, XW, 200, 'XLR jack', '3-pin female');
+pin(XX, my(0), 'L', '3  DATA +'); pin(XX, my(1), 'L', '2  DATA -'); pin(XX, my(2), 'L', '1  GND');
+line(TX+TW, my(0), XX, my(0), C.dmx, 3); line(TX+TW, my(1), XX, my(1), C.dmx, 3);
+text((TX+TW+XX)/2, my(0)-8, 'A', 15, 700, C.dmx, 'middle'); text((TX+TW+XX)/2, my(1)-8, 'B', 15, 700, C.dmx, 'middle');
+flag(XX, my(2), 'gnd', -1);
+
+/* ---------------- PSU ---------------- */
+const PY = 760;
+box(NX, PY, NW, 90, 'Raspberry Pi USB-C supply', '5.1 V, 3 A (the only power source)');
+line(NX+NW/2, PY, NX+NW/2, ry(9)+86, C.pwr, 5);
+text(NX+NW/2+14, PY-40, 'USB-C cable, +5 V', 15, 600, C.pwr);
+text(NX, PY+120, 'To program: pull the supply,', 15, 400, '#555'); text(NX, PY+140, 'plug the PC into the same port.', 15, 400, '#555');
+text(NX, PY+164, 'Never both at once.', 15, 700, '#b02020');
+
+/* ---------------- NOTES ---------------- */
+const NYY = 1000;
+text(DX, NYY, 'Notes', 21, 700);
+const notes = [
+ '1. The Nano makes 3.3 V from the USB port. Its 3V3 pin feeds the display (about 33 mA) and the MT6701.',
+ '2. The Nano has no 5 V pin. VBUS passes the supply voltage through; it feeds the TMC6300 and the MAX485.',
+ '3. TMC6300 VIO is driven by A1: low = driver off (so nothing moves while the Nano boots).',
+ '4. MAX485 DE and RE are tied to +5 V = always sending. RO is unused (no DMX in).',
+ '5. If the lamps do not react, swap A and B at the MAX485 (the module labels differ).',
+ '6. 10 wires go through the motor bore to the display (8 signals + VCC + GND).',
+ '7. MISO, TP_INT and TP_RST are left open (touch is polled). To check on the real module.',
+ '8. I2C pull-ups (10 kohm) are on the display module; add 4.7 kohm only if the bus fails.',
+ '9. Put the 120 ohm DMX terminator plug into the last lamp, not into this box.'
+];
+notes.forEach((t,i)=>text(DX, NYY+32+i*28, t, 16, 400, '#222'));
+
+document.getElementById('s').innerHTML = o;
+window.__png = null;
+const svg = new XMLSerializer().serializeToString(document.getElementById('s'));
+const img = new Image();
+img.onload = ()=>{ const c = document.createElement('canvas'); c.width=2060*1.5; c.height=1300*1.5; const g=c.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height); g.drawImage(img,0,0,c.width,c.height); window.__png = c.toDataURL('image/png'); };
+img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+</script></body></html>

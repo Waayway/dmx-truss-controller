@@ -1,0 +1,135 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Housing</title><style>html,body{margin:0;background:#fff}</style></head><body>
+<svg id="s" xmlns="http://www.w3.org/2000/svg" width="2000" height="1760" viewBox="0 0 2000 1760" font-family="Helvetica, Arial, sans-serif"></svg>
+<script>
+let o='';
+const T=(x,y,t,sz=18,w=400,c='#1b1f24',a='start')=>{o+=`<text x="${x}" y="${y}" font-size="${sz}" font-weight="${w}" fill="${c}" text-anchor="${a}">${t}</text>`};
+const L=(x1,y1,x2,y2,c='#333',w=2,d='')=>{o+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}" ${d?`stroke-dasharray="${d}"`:''} stroke-linecap="round"/>`};
+const R=(x,y,w,h,f,s='#222',sw=2,rx=0,d='')=>{o+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${f}" stroke="${s}" stroke-width="${sw}" ${d?`stroke-dasharray="${d}"`:''}/>`};
+const C=(x,y,r,f,s='#222',sw=2,d='')=>{o+=`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${s}" stroke-width="${sw}" ${d?`stroke-dasharray="${d}"`:''}/>`};
+const P=(pts,f,s='#222',sw=2,d='')=>{o+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="${f}" stroke="${s}" stroke-width="${sw}" ${d?`stroke-dasharray="${d}"`:''}/>`};
+
+T(40,48,'Housing: USB-C access and mounts (concept, v1)',30,700);
+T(40,76,'Wall orientation: the USB-C cable leaves through the bottom facet. Sizes in mm. Everything here is a proposal, not a verified design.',16,400,'#555');
+
+/* ===== A: view onto the back plate ===== */
+const S=8.4, cx=450, cy=520;
+const X=x=>cx+x*S, Y=y=>cy-y*S;
+T(40,120,'A  Back plate seen from the front (ring and motor removed)',20,700);
+const octp=a=>{const r=a/Math.cos(Math.PI/8);return [...Array(8)].map((_,k)=>{const t=Math.PI/8+k*Math.PI/4;return [X(r*Math.cos(t)),Y(r*Math.sin(t))]})};
+P(octp(45),'#e9ecef','#222',3);
+P(octp(42.5),'#ffffff','#888',1.5);
+// slot in bottom wall: white cut over the wall band
+R(X(-20),Y(-42.5)-1,16*S,2.5*S+3,'#ffffff','#ffffff',0);
+L(X(-20),Y(-42.5),X(-20),Y(-45),'#222',3); L(X(-4),Y(-42.5),X(-4),Y(-45),'#222',3);
+// perfboard
+const bx=35, by=25, ch=4;
+P([[X(-bx+ch),Y(by)],[X(bx-ch),Y(by)],[X(bx),Y(by-ch)],[X(bx),Y(-by+ch)],[X(bx-ch),Y(-by)],[X(-bx+ch),Y(-by)],[X(-bx),Y(-by+ch)],[X(-bx),Y(by-ch)]],'#cfe8d6','#3f9a63',2.4);
+T(X(-34),Y(by)-8,'perfboard 70 x 50, corners cut 4 mm',15,600,'#2d7a4b');
+// motor above
+C(X(0),Y(0),16*S,'none','#c46d0d',2.2,'8 6'); C(X(0),Y(0),3*S,'none','#c46d0d',2,'');
+T(X(16)+12,Y(8),'motor above',15,600,'#c46d0d'); T(X(16)+12,Y(8)+18,'(32 mm, bore 6)',14,400,'#c46d0d');
+// Nano
+const nx0=-21, ny0=-25, nw=17.78, nl=43.18;
+R(X(nx0),Y(ny0+nl),nw*S,nl*S,'#1d2a3a','#0b1622',2,4);
+T(X(nx0+nw/2),Y(ny0+nl/2),'Nano ESP32',17,700,'#ffffff','middle');
+[[1.27,1.27],[1.27+15.24,1.27],[1.27,1.27+40.64],[1.27+15.24,1.27+40.64]].forEach(h=>C(X(nx0+h[0]),Y(ny0+h[1]),0.83*S,'#c9ced4','#fff',1.5));
+T(X(nx0+nw/2),Y(ny0+nl)+20,'antenna end',14,700,'#ff9a9a','middle');
+R(X(-16.5),Y(-25),9*S,3.2*S,'#b9bec4','#555',1.5,2);
+// plug through slot
+R(X(-18.2),Y(-25)+3.2*S,12.35*S,18*S,'#6b7280','#222',2,6);
+T(X(-12),Y(-25)+3.2*S+34,'plug',15,700,'#fff','middle');
+R(X(-13.6),Y(-25)+3.2*S+18*S,2.8*S,6*S,'#6b7280','#222',1.5,4);
+// clamp bar over the plug body (printed), two screws
+R(X(-23),Y(-35),22*S,3.6*S,'#e0a030','#8a5a10',2,3);
+C(X(-21.5),Y(-35)+1.8*S,0.9*S,'#8a5a10','#333',1.2); C(X(-2.5),Y(-35)+1.8*S,0.9*S,'#8a5a10','#333',1.2);
+// keyholes (slot below the head hole)
+function key(x,y){ C(X(x),Y(y),5*S,'none','#999',1.2,'4 4'); R(X(x)-1.75*S,Y(y),3.5*S,7*S,'#fff','#222',2.4); C(X(x),Y(y),3.5*S,'#fff','#222',2.4); R(X(x)-1.75*S+2,Y(y)-2,3.5*S-4,6,'#fff','#fff',0); }
+key(12,35); key(12,-35);
+// labels (outside octagon, leader lines)
+function lab(px,py,tx,ty,t1,t2,c){ L(px,py,tx-6,ty-5,'#777',1.2); T(tx,ty,t1,15,700,c||'#1b1f24'); if(t2) T(tx,ty+19,t2,14,400,'#444'); }
+lab(X(12)+4*S,Y(35)-6,X(33),Y(35)-34,'keyhole','head hole 7, slot 3.5 x 7 pointing down');
+lab(X(12)+4*S,Y(-35)+6,X(33),Y(-35)+12,'keyhole','(same pattern at the bottom)');
+const mk=(x,y,n,c)=>{C(x,y,13,'#fff',c,2.4);T(x,y+6,String(n),16,700,c,'middle');};
+mk(X(-27),Y(-34),1,'#8a5a10'); mk(X(-24.5),Y(17),2,'#1d2a3a'); mk(X(-12)+60,Y(-25)+3.2*S+10*S,3,'#444');
+T(40,Y(-60)+10,'1  Clamp bar: printed, held by 2 x M2 screws, presses on the plug body.',16,600,'#8a5a10');
+T(40,Y(-60)+34,'2  Nano: 4 M1.6 screws on standoffs (holes 40.64 x 15.24 apart, datasheet).',16,600,'#1d2a3a');
+T(40,Y(-60)+58,'3  Cable to the supply leaves through the bottom facet.',16,600,'#444');
+// dimension of keyhole pair (outside, right)
+L(X(50),Y(35),X(50),Y(-35),'#444',1.4); L(X(48.5),Y(35),X(51.5),Y(35),'#444',1.4); L(X(48.5),Y(-35),X(51.5),Y(-35),'#444',1.4);
+o+=`<text x="${X(50)+18}" y="${Y(0)}" font-size="16" font-weight="600" fill="#333" transform="rotate(-90 ${X(50)+18} ${Y(0)})" text-anchor="middle">70 apart</text>`;
+// XLR conflict zone
+{const a=-Math.PI/4, fx=42.5*Math.cos(a), fy=42.5*Math.sin(a), inx=-Math.cos(a), iny=-Math.sin(a), tx=-Math.sin(a), ty=Math.cos(a);
+ const pts=[[-15.5,0],[15.5,0],[15.5,24.1],[-15.5,24.1]].map(p=>[X(fx+tx*p[0]+inx*p[1]),Y(fy+ty*p[0]+iny*p[1])]);
+ P(pts,'rgba(214,47,47,0.12)','#d62f2f',2.2,'7 5');
+ T(X(30),Y(-44)+8,'If the XLR panel jack went here:',15,700,'#d62f2f');
+ T(X(30),Y(-44)+27,'flange 31 x 26, body 24 deep, it sits',14,400,'#d62f2f');
+ T(X(30),Y(-44)+44,'on top of the board corner',14,400,'#d62f2f');}
+L(X(36),Y(-62),X(46),Y(-62),'#222',3); T(X(36),Y(-62)+20,'10 mm',14,600);
+
+/* ===== B: section through the plug (z to the right, up is the top of the unit) ===== */
+const Z=13, bz=1080, by0=170;
+const zx=z=>bz+z*Z, Yb=y=>by0+(-10-y)*Z;
+T(1040,120,'B  Section through the plug (plane x = -12, bottom of the unit lower end)',20,700);
+R(zx(0),Yb(-10),2.5*Z,35*Z,'#d9dde2','#222',2);                    // back plate (y -10..-45)
+T(zx(0),Yb(-10)-10,'wall side',14,600,'#666');
+R(zx(0),Yb(-42.5),22*Z,2.5*Z,'#d9dde2','#222',2);                // bottom wall
+R(zx(8.3),Yb(-42.5)-1,10*Z,2.5*Z+2,'#ffffff','#ffffff',0);        // slot
+L(zx(8.3),Yb(-42.5),zx(8.3),Yb(-45),'#222',3); L(zx(18.3),Yb(-42.5),zx(18.3),Yb(-45),'#222',3);
+R(zx(19.5),Yb(-12),2.5*Z,30.5*Z,'#d9dde2','#222',2);           // front plate (y -42.5..-12)
+R(zx(2.5),Yb(-23),4*Z,2*Z,'#c9ced4','#555',1.5);                  // standoff
+R(zx(6.5),Yb(-25),1.6*Z,15*Z,'#3f9a63','#1f5f3b',1.5);            // perfboard
+R(zx(8.1),Yb(-24),2.5*Z,1.2*Z,'#2b2f35','#000',1.2);               // header
+R(zx(10.6),Yb(-25),1.0*Z,15*Z,'#1d2a3a','#0b1622',1.5);           // Nano pcb
+R(zx(11.6),Yb(-25.8),3.3*Z,8*Z,'#b9bec4','#555',1.5);            // usb-c receptacle
+R(zx(10.3),Yb(-32),6.5*Z,19*Z,'#6b7280','#222',2,5);              // plug overmold
+R(zx(11.55),Yb(-51),4*Z,3.5*Z,'#6b7280','#222',1.5,4);              // cable
+R(zx(16.8),Yb(-40),2.5*Z,5*Z,'#e0a030','#8a5a10',2,2);            // clamp bar
+// callouts to the right of the unit
+const RX=zx(26);
+function call(zp,yp,ty,t1,t2,c){ L(zx(zp),Yb(yp),RX-8,ty-5,'#777',1.2); T(RX,ty,t1,15,700,c||'#1b1f24'); if(t2) T(RX,ty+19,t2,14,400,'#444'); }
+call(7.3,-22,Yb(-14)-10,'perfboard on 4 mm standoffs','',  '#2d7a4b');
+call(11.1,-14,Yb(-19)+8,'Nano on its pin headers','pcb about 10.6 above the plate');
+call(13.3,-38,Yb(-30),'plug, overmold 12.35 x 6.5','spec limit, cables up to 13 x 7.4 seen');
+call(18,-38,Yb(-39)+8,'clamp bar','presses the plug body, so a cable pull goes into the housing','#8a5a10');
+call(13.3,-48,Yb(-50)+14,'cable','','#444');
+// slot dimension
+L(zx(8.3),Yb(-45),zx(8.3),Yb(-61),'#d62f2f',1.2,'4 4'); L(zx(18.3),Yb(-45),zx(18.3),Yb(-61),'#d62f2f',1.2,'4 4');
+L(zx(8.3),Yb(-60),zx(18.3),Yb(-60),'#d62f2f',2); L(zx(8.3),Yb(-60.8),zx(8.3),Yb(-59.2),'#d62f2f',2); L(zx(18.3),Yb(-60.8),zx(18.3),Yb(-59.2),'#d62f2f',2);
+T(zx(13.3),Yb(-60)+30,'slot 10 high (16 wide)',15,700,'#d62f2f','middle');
+// base depth dimension
+L(zx(0),Yb(-12)-0,zx(22),Yb(-12),'#444',1.2); T(zx(11),Yb(-12)-6,'base 22 deep',14,600,'#444','middle');
+
+/* ===== C: wall and desk ===== */
+T(40,1140,'C  Mounts: wall (left), desk wedge (right), side view',20,700);
+const sc=4.2;
+function unit(ox,oy,rot){
+  o+=`<g transform="translate(${ox},${oy}) rotate(${rot})">`;
+  const r=(z0,z1,y0,y1,f)=>`<rect x="${z0*sc}" y="${-y1*sc}" width="${(z1-z0)*sc}" height="${(y1-y0)*sc}" fill="${f}" stroke="#222" stroke-width="2"/>`;
+  o+=r(0,22,-45,45,'#d9dde2')+r(22,40,-29,29,'#c4c7cb')+r(40.8,54,-29,29,'#3a3e44')+r(49,52,-16,16,'#17191c');
+  o+='</g>';
+}
+const wx=180, wy=1440;
+R(wx-24,wy-250,24,500,'#e3ded5','#222',2); T(wx-12,wy-262,'wall',15,600,'#666','middle');
+unit(wx,wy,0);
+[35,-35].forEach(y=>{ R(wx,wy-y*sc-1.75*sc,2.5*sc,3.5*sc,'#8a8f96','#333',1.5); R(wx+2.5*sc,wy-y*sc-3.5*sc,1.8*sc,7*sc,'#8a8f96','#333',1.5); });
+T(wx+300,wy-35*sc-6,'2 screws, 70 apart',15,700);
+T(wx+300,wy-35*sc+14,'head 7, shaft 3.5 into the keyholes',14,400,'#444');
+T(wx+300,wy+35*sc+6,'lift on, slide down',15,700);
+T(wx+300,wy+35*sc+26,'USB-C cable hangs down from the bottom facet',14,400,'#444');
+// desk
+const dx=1180, floor=1650;
+L(dx-80,floor,dx+700,floor,'#222',3); T(dx+700,floor+22,'desk',15,600,'#666','end');
+const wlen=100*sc, wh=Math.sin(Math.PI/4)*wlen, ww=Math.cos(Math.PI/4)*wlen;
+P([[dx,floor],[dx+ww,floor],[dx,floor-wh]],'#b8c0c8','#222',2.4);
+T(dx+14,floor-14,'printed wedge, 45 deg',15,700);
+unit((dx+ww+dx)/2,(floor+floor-wh)/2,-45);
+T(dx-100,floor+30,'Desk: the wedge has two printed pegs that use the same keyholes,',15,600);
+T(dx-100,floor+50,'plus a cable notch at the bottom. The wedge is 100 long, 71 high.',14,400,'#444');
+
+document.getElementById('s').innerHTML=o;
+const svg=new XMLSerializer().serializeToString(document.getElementById('s'));
+const img=new Image();window.__png=null;
+img.onload=()=>{const c=document.createElement('canvas');c.width=2000*1.5;c.height=1760*1.5;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(img,0,0,c.width,c.height);window.__png=c.toDataURL('image/png')};
+img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+</script></body></html>
