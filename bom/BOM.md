@@ -39,7 +39,7 @@ Stock was read from each shop's own product page on 2026-11-24 unless noted. Re-
 - **M1** 32 mm; 5.9 mm bore; 8 magnetic poles (datasheet)
 - **U2** 2-11 V; 6 PWM inputs
 - **C1** 5 V rail
-- **-** For the perfboard sockets and pins. Choose LOW sockets (about 4 mm) under the Nano; see cad/base_usbc.scad
+- **-** MALE pin strip (pins 11.6 mm long); snap off pieces. For modules that arrive without pins (check the MT6701 and MAX485 and TMC6300 listings). It is NOT a socket. The Nano with headers already has its own pins
 - **U4** Comes with a 13-pin GH1.25 cable per Waveshare
 - **U3** Pin names not yet seen
 - **U5** Check for a built-in 120 ohm resistor
