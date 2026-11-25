@@ -47,3 +47,8 @@ Not started. Plan: ESP32 Arduino core, SimpleFOC for detents, LVGL for the UI, `
 
 - The 40-pin strip in the BOM is a male pin strip, not a socket. The CAD stack-up in `cad/base_usbc.scad` assumes the Nano sits about 2 mm above the perfboard on low sockets. If you solder the Nano's own pins straight into the board instead, it sits about 2.5 mm above the board; the slot assert still passes (plug axis about 13.2 mm, slot top about 18.2 mm, front plate at 19.5 mm), but re-run `make` after changing `sock_h`/`pin_in`.
 - It is not confirmed whether the MT6701, MAX485 and TMC6300 modules ship with pins fitted.
+
+## Arrived (2026-11-24)
+
+- XLR jack and Neutrik USB-C jack are in. Both use the same D-size cutout (24 mm hole, 19 x 24 mm screw pattern), so the final base can take two identical holes.
+- Still to measure: the USB-C fly-lead plug (fits the 16 x 10 mm slot in the first-test base?) and the flange of both jacks.
