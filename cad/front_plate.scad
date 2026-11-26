@@ -28,7 +28,7 @@ module front_plate() {
         for (a = [30, 150, 270])
             rotate([0, 0, a]) translate([21, 0, -1]) cylinder(d = 1.7, h = plate_t + 2, $fn = 32);
         // slot for the motor leads (3-pin 1.25 mm connector exits the side of the motor; position UNVERIFIED)
-        translate([motor_od / 2 - 6, -5, -1]) cube([14, 10, plate_t + 2]);
+        rotate([0, 0, 30]) translate([motor_od / 2 - 6, -5, -1]) cube([14, 10, plate_t + 2]);   // user: the lead leaves between two of the three screw holes (holes at 90/210/330 deg, so 30 deg is the midpoint)
         // three M1.6 clearance holes on the 20.5 pitch circle (datasheet), 120 degrees apart
         for (i = [0 : motor_hole_n - 1])
             rotate([0, 0, i * 360 / motor_hole_n + 90]) translate([motor_hole_pcd / 2, 0, -1])

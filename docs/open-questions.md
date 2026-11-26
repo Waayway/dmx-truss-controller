@@ -52,3 +52,13 @@ Not started. Plan: ESP32 Arduino core, SimpleFOC for detents, LVGL for the UI, `
 
 - XLR jack and Neutrik USB-C jack are in. Both use the same D-size cutout (24 mm hole, 19 x 24 mm screw pattern), so the final base can take two identical holes.
 - Still to measure: the USB-C fly-lead plug (fits the 16 x 10 mm slot in the first-test base?) and the flange of both jacks.
+
+## Measurements received 2026-11-24 (see cad/params.scad)
+
+- **Nano:** user measured about 15 mm tall with headers. Unclear if that includes the pins below the plastic spacer; asked.
+- **XLR jack:** 24 mm plus about 5 mm of solder cups = about 29 mm behind the panel.
+- **Neutrik USB-C jack:** the drawing gives a 29.4 mm rigid body (flange 26 x 31) and a 100 mm cable (L) between the strain reliefs. The user measures 50 mm from the flange front to where the plain cable starts (about 1-2 cm of that is strain relief). **That 50 mm is stiff and cannot bend**, so an XLR (29 mm) and this jack (50 mm) cannot face each other across the 85 mm inside of the base. They need facets about 90 degrees apart. Total jack length (flange to plug tip) still to be measured: the drawing suggests more than the "10 cm total" the user quoted.
+- **Motor:** 3-wire lead leaves between two of the three screw holes (plate slot rotated to 30 degrees).
+- **TMC6300 (SparkFun drawing):** 20.3 x 15.2 mm (0.80 x 0.60 in), no mounting holes, two 8-pin columns 12.7 mm apart at 2.54 mm pitch.
+- **MAX485:** 44 x 14 x 19 mm, confirmed.
+- **MT6701 magnet (user supplied):** 4 mm radius (maybe diameter) x 1.5 mm. **Open design problem:** a disc magnet must sit exactly over the sensor chip on the motor axis, but the column with the display wires occupies the axis (and the 5.9 mm bore). Where the magnet and sensor go is not designed yet.

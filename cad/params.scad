@@ -100,3 +100,28 @@ z_hub_top      = z_hub_bot + hub_t;
 // the column must reach from its foot to the carrier underside
 col_foot_z     = z_plate_top - plate_t - 3;        // foot sits under the front plate, 3 mm foot
 col_top_z      = z_carrier_bot + (carrier_t - pocket_h) - 0.2;   // 0.2 mm below the pocket floor
+
+// ---------- measured / read 2026-11-24 (user measurements flagged as such) ----------
+// Arduino Nano ESP32 as the user holds it, header pins fitted: about 15 mm tall (table to top of USB-C port).
+// UNRESOLVED: whether that includes the long pins below the plastic spacer. Do not use until clarified.
+nano_total_h_user = 15;
+
+// XLR NC3FD-LX: Neutrik drawing 24.1 mm behind the panel; USER says that excludes the solder cups, add about 5 mm.
+xlr_depth      = 24 + 5;   // user measurement, about 29 mm behind the panel face including the solder cups
+
+// Neutrik NAUSBC-5G-FL10 (drawing ST-NAUSBC-5G-FL*, read 2026-11-24)
+usbj_body      = 29.4;     // VERIFIED drawing (+-0.3): rigid body behind the flange front face
+usbj_stiff     = 50;       // USER measurement: flange front face to where the plain cable starts, about 1-2 cm of that is ribbed strain relief
+usbj_cable_L   = 100;      // drawing: cable length L = 100 mm for FL10. NOT the same as the user's remark that the total is 10 cm; to be re-measured
+
+// TMC6300 board (SparkFun dimensions.pdf, inches converted): NO mounting holes, only the two header columns
+tmc_l          = 20.32;    // 0.80 in
+tmc_w          = 15.24;    // 0.60 in
+tmc_row_gap    = 12.7;     // 0.50 in between the two pin columns, 2.54 mm pitch, 8 pins per column
+
+// MAX485 module (Otronic listing; user confirms same): 44 x 14 x 18.9 mm
+max485_l = 43.9; max485_w = 14.1; max485_h = 18.9;
+
+// MT6701 magnet supplied by the user: "4 mm radius, 1.5 mm thick" (radius or diameter UNCONFIRMED; must be diametrically magnetised)
+mt_magnet_r    = 4;        // as stated, may really be a 4 mm DIAMETER
+mt_magnet_t    = 1.5;
