@@ -62,3 +62,13 @@ Not started. Plan: ESP32 Arduino core, SimpleFOC for detents, LVGL for the UI, `
 - **TMC6300 (SparkFun drawing):** 20.3 x 15.2 mm (0.80 x 0.60 in), no mounting holes, two 8-pin columns 12.7 mm apart at 2.54 mm pitch.
 - **MAX485:** 44 x 14 x 19 mm, confirmed.
 - **MT6701 magnet (user supplied):** 4 mm radius (maybe diameter) x 1.5 mm. **Open design problem:** a disc magnet must sit exactly over the sensor chip on the motor axis, but the column with the display wires occupies the axis (and the 5.9 mm bore). Where the magnet and sensor go is not designed yet.
+
+## Neutrik USB-C jack cable: photo from the user (docs/images/neutrik-usbc-cable-photo.jpg)
+
+Scaled against the Nano (43.18 mm long = 540 px). Estimates from a hand-held photo, not caliper measurements:
+- Jack body from flange front to end of the lower strain relief: about 54 mm (user: about 50).
+- Flexible cable: about 75 mm (user: about 7.5 cm).
+- Plug end: about 37 mm from the Nano's edge to where the plain cable starts (overmold about 20 mm, strain relief about 11 mm, metal plug about 7 mm). This is shorter than the 45 mm assumed earlier.
+- Total about 166 mm; the user measured 17 cm, so the scale holds up.
+- The photo shows the cable laid as a U-turn with the Nano alongside the jack body, plug pointing back at the wall. That works physically. An earlier note here claimed no layout fits; that was wrong, the cable's 75 mm lets the U sit deeper than the jack body.
+- The U-turn needs about 95 to 98 mm of depth from the outer wall face (bend radius 14 to 10 mm), so a base of about 101 to 103 mm across flats. The current base is 90 mm. Not modelled yet, rough calculation only.
