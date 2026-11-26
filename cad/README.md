@@ -13,15 +13,16 @@ Coordinates: z = 0 is the wall side (back of the base), +z points to the viewer.
 | `display_carrier.scad` | Holds the Waveshare module | pocket up | Fixed, never turns. Socket for the column |
 | `rotor_hub.scad` | The turning link: motor to ring | flat | Glued to the motor; three walls that sit in ring pockets |
 | `ring.scad` | The ring you turn, 58 / 43 mm, 60 ribs | flat | 3 pockets for the hub walls, marker dot |
-| `sensor_holder.scad` | Holds the MT6701 board under the motor | flat | **Placeholder**: where the magnet goes is not solved (see `docs/open-questions.md`) |
-| `ghosts.scad` | Render-only stand-ins: USB-C jack + fly-lead, Nano, XLR, perfboard strip | not printed | Used by the clearance check and `layout-ghosts.stl` |
+| `sensor_holder.scad` | Carrier for the 22 x 22 mm MT6701 board (4 x M2) | flat | **Placeholder, do not print**: where the magnet goes is not solved (see `docs/open-questions.md`) |
+| `lib.scad` | Helpers: perfboard outlines with sawn corners and their rim frames | n/a | Used by `base.scad` and `ghosts.scad` |
+| `ghosts.scad` | Render-only stand-ins: USB-C jack + fly-lead, Nano, XLR, MAX485, TMC6300, three perfboard pieces | not printed | Used by the clearance check and `layout-ghosts.stl` |
 | `assembly.scad` | All parts in place | n/a | Echoes the z-stack and asserts basic fit. `show_ghosts = true` adds the stand-ins |
 | `clearance.scad` | Overlap test between two named parts | n/a | Run through `make check` |
 | `preview/view.html` | Quick STL viewer (three.js) | n/a | `node ../scripts/serve.cjs`, then open `/preview/view.html?f=base,layout-ghosts&v=top` |
 
 ## Why the base is 115 mm
 
-The Neutrik USB-C jack has a 54 mm rigid body and a 17 cm fly-lead (about 75 mm flexible, about 37 mm stiff plug end). The only way to lay it in is a U-turn with the Nano alongside the jack body, plug pointing back at the wall. A solver (see `docs/open-questions.md`) found no layout in a 105 mm octagon because the chamfered corners clip the Nano's far end; 110 mm is the minimum (about 4 mm from the cable and Nano to the inner wall) and 115 mm leaves about 8 mm. Set `base_flat` in `params.scad` to try 110. The Nano then sits at x = -16, antenna end 12 mm off the wall, on perfboard strip A (22 x 70 mm, cut from the 5 x 7 cm board), so its USB-C axis lines up with the jack axis at z = 16.
+The Neutrik USB-C jack has a 54 mm rigid body and a 17 cm fly-lead (about 75 mm flexible, about 37 mm stiff plug end). The only way to lay it in is a U-turn with the Nano alongside the jack body, plug pointing back at the wall. A solver (see `docs/open-questions.md`) found no layout in a 105 mm octagon because the chamfered corners clip the Nano's far end; 110 mm is the minimum (about 4 mm from the cable and Nano to the inner wall) and 115 mm leaves about 8 mm. Set `base_flat` in `params.scad` to try 110. The jack sits 4 mm right of centre, the Nano at x = -20 with its antenna end 12 mm off the wall, on perfboard piece A (20 x 46 mm, cut from the 5 x 7 cm board), so its USB-C axis lines up with the jack axis at z = 16. Cable slack at this size is only about 1 mm (see below).
 
 ## What is checked (`make check`)
 
@@ -37,6 +38,7 @@ The Neutrik USB-C jack has a 54 mm rigid body and a 17 cm fly-lead (about 75 mm 
 - The cable stand-in is a centreline with a fixed radius; the real cable ripples when bent and its bend radius is an estimate (12 mm). The jack body, strain relief and plug sizes come from a photo.
 - The motor drawing does not say which face is the stator mounting face or which part turns. The hub, plate and column assume the top turns and the bottom mounts. Check on the real motor first.
 - The Nano's height above the perfboard (2.5 mm header spacer) is an estimate; the user's 15 mm measurement is ambiguous. Change `nano_hdr_h`.
-- The TMC6300 and MAX485 are **not placed** in the base yet. Strip A holds only the Nano; the right half of the floor is free for the other boards.
-- The MT6701 sensor and its magnet are **not solved**: the display column and wires occupy the motor axis where a disc magnet must sit.
+- The TMC6300 and MAX485 are placed (13 mm tall modules, user), each on its own perfboard piece with a rim frame; their pin layouts are not known.
+- **Cable slack is about 1 mm at 115 mm.** The USB-C fly-lead leaves almost no spare length in this base; see `docs/open-questions.md`. Check with the real jack on a 1:1 layout before printing.
+- The MT6701 sensor and its 4 mm magnet are **not solved**: the display column and wires occupy the motor axis where the magnet must sit. `sensor_holder.scad` only records the board dimensions.
 - The 10 display wires through the 4.0 mm column bore: free area is enough on paper (12.6 mm2 vs about 9 mm2), but it has not been tried with the real cable.

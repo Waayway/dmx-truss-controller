@@ -26,7 +26,8 @@ module part(n) {
     if (n == "g_cable")  usbc_cable();
     if (n == "g_plug")   usbc_plug();
     if (n == "g_nano")   nano();
-    if (n == "g_board")  boardA();
+    if (n == "g_board")  { boardA(); boardB(); }
+    if (n == "g_mods")   { max485(); tmc6300(); }
     if (n == "g_xlr")    xlr_jack();
 }
 

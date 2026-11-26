@@ -4,6 +4,7 @@
 //   - Neutrik XLR jack
 //   - Arduino Nano ESP32 with its header pins, perfboard strip A
 include <params.scad>
+include <lib.scad>
 
 module seg(a, b) { hull() { translate(a) sphere(r = cab_r, $fn = 16); translate(b) sphere(r = cab_r, $fn = 16); } }
 
@@ -38,7 +39,13 @@ module nano() {
         translate([nano_x + sx * 7.62 - 1.3, nano_y_end + 1, board_top_z]) cube([2.6, nano_l - 2, nano_hdr_h]);
 }
 
-module boardA() { translate([boardA_cx - boardA_w / 2, boardA_y0, board_z]) cube([boardA_w, boardA_l, board_t]); }
+module piece(p) { translate([0, 0, board_z]) linear_extrude(board_t) board2d(p[0], p[1], p[2], p[3], p[4]); }
+module boardA() { piece(pieceA()); }
+module boardB() { piece(pieceB1()); piece(pieceB2()); }
+
+// modules stand mod_h (13 mm, user: with pins soldered in) above the board top
+module max485() { translate([max485_cx - max485_w / 2, max485_cy - max485_l / 2, board_top_z]) cube([max485_w, max485_l, mod_h]); }
+module tmc6300() { translate([tmc_cx - tmc_l / 2, tmc_cy - tmc_w / 2, board_top_z]) cube([tmc_l, tmc_w, mod_h]); }
 
 module xlr_jack() {                        // on the RIGHT facet, body runs inward (-x)
     translate([base_flat / 2 - xlr_depth, xlr_along, jack_zc]) rotate([0, 90, 0]) cylinder(d = xlr_body_d, h = xlr_depth);
@@ -47,7 +54,7 @@ module xlr_jack() {                        // on the RIGHT facet, body runs inwa
 }
 
 module ghosts() {
-    usbc_jack(); usbc_cable(); usbc_plug(); nano(); boardA(); xlr_jack();
+    usbc_jack(); usbc_cable(); usbc_plug(); nano(); boardA(); boardB(); max485(); tmc6300(); xlr_jack();
 }
 
 ghosts();

@@ -6,6 +6,7 @@
 //   right facet  : XLR jack
 // The hanging direction is "down" = the bottom facet, so the USB-C cable hangs towards the floor on a wall.
 include <params.scad>
+include <lib.scad>
 
 module octagon(across_flats, h) {
     r = across_flats / 2 / cos(22.5);
@@ -57,11 +58,11 @@ module base() {
             on_facet(0, usbc_x, jack_zc) d_pad();
             on_facet(90, xlr_along, jack_zc) d_pad();
 
-            // four posts that carry perfboard strip A (the Nano strip). They stand in the corners, outside the Nano's pin rows.
-            // The board is held with hot glue or a drop of epoxy; there is no screw because the Nano covers the ends.
-            for (sx = [-1, 1], y = [boardA_y0 + 1.5, boardA_y0 + boardA_l - 1.5])
-                translate([boardA_cx + sx * (boardA_w / 2 - 1.5), y, back_plate - 0.01])
-                    cylinder(d = 3, h = post_h + 0.01);
+            // rim frames under the three perfboard pieces (A: Nano, B1: MAX485, B2: TMC6300). The board edge rests on a 1.2 mm wall,
+            // so the solder pads and pin tips in the middle stay free. The boards are held with hot glue or a drop of epoxy.
+            p = pieceA();  board_frame(p[0], p[1], p[2], p[3], p[4]);
+            p1 = pieceB1(); board_frame(p1[0], p1[1], p1[2], p1[3], p1[4]);
+            p2 = pieceB2(); board_frame(p2[0], p2[1], p2[2], p2[3], p2[4]);
 
             // four corner bosses for the front plate; they stop under the plate
             for (a = boss_angles)
@@ -72,9 +73,9 @@ module base() {
         on_facet(0, usbc_x, jack_zc) d_cut();
         on_facet(90, xlr_along, jack_zc) d_cut();
 
-        // two keyholes through the back plate, slot pointing down
-        for (sy = [-1, 1])
-            translate([key_x, sy * key_dx / 2, -1])
+        // two keyholes through the back plate, side by side, slots pointing down
+        for (sx = [-1, 1])
+            translate([sx * key_dx / 2, key_y, -1])
                 linear_extrude(back_plate + 2) keyhole2d();
     }
 }

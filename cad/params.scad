@@ -88,8 +88,8 @@ cab_bend_r     = 12;     // ESTIMATE: bend radius of the cable centreline (user:
 plug_exposed   = 30;     // PHOTO: plug end beyond the Nano port edge (overmold + strain relief), 37 incl. 7 mm inside the port
 plug_w         = 13;     // real USB-C overmolds measured up to 13.0 x 7.4
 plug_h         = 7.4;
-usbc_x         = 8;      // position of the USB-C jack along the BOTTOM facet (flange must stay on the facet)  PROPOSAL, from the layout solver
-nano_pull_in   = 12;     // how far the Nano's antenna end is held off the wall  PROPOSAL, from the layout solver
+usbc_x         = 4;      // position of the USB-C jack along the BOTTOM facet (scripts/place-modules.mjs: left enough to leave a strip for the MAX485)  PROPOSAL
+nano_pull_in   = 12;     // how far the Nano's antenna end is held off the wall  PROPOSAL (layout solver)
 wall_margin    = 1.5;
 
 // derived cable layout (U-turn, Nano alongside the jack body, plug pointing back at the wall)
@@ -104,31 +104,47 @@ cab_b          = (cab_apb - cab_amb) / 2;                              // straig
 nano_x         = usbc_x - 2 * cab_bend_r;                              // Nano is to the LEFT of the jack
 assert(cab_b >= 0, "cable is too short for this layout: reduce nano_pull_in or the bend radius");
 
-// perfboard strip A carries the Nano (22 x 70 cut from the 5 x 7 board)
-boardA_w       = 22;
-boardA_l       = 70;
-boardA_cx      = nano_x - 1;
-boardA_y0      = nano_y_end - 2.5;
+// perfboard pieces, all cut from the user's 5 x 7 cm board; each rests on a rim frame (no screws, hot glue)
+board_rim      = 1.2;    // width of the rim frame under the board edge; pin pads stay inside it
+board_pad      = 1.5;    // board outline = module outline + this on every side
+board_chamfer  = 4;      // saw off the corners that point at the diagonal walls
 board_top_z    = jack_zc - nano_port_axis;                             // so the Nano's port axis lines up with the jack axis
-board_z        = board_top_z - board_t;                                // underside of the perfboard
-post_h         = board_z - back_plate;                                 // standoff height
+board_z        = board_top_z - board_t;                                // underside of every perfboard piece
+post_h         = board_z - back_plate;                                 // rim frame height
+mod_h          = 13;     // USER: height of a module with its pins soldered into the perfboard, measured from the board top
+// piece A carries the Nano
+boardA_w       = nano_w + 2.2;
+boardA_l       = nano_l + 3;
+boardA_cx      = nano_x;
+boardA_y0      = nano_y_end - 1.5;
+// piece B1 carries the MAX485, standing vertically beside the cable leg (scripts/place-modules.mjs)
+max485_cx      = 16.5;
+max485_cy      = 21.5;
+// piece B2 carries the TMC6300, lower right, long side along x
+tmc_cx         = 29.5;
+tmc_cy         = -22.5;
 
-// ---------- TMC6300 board (SparkFun dimensions.pdf, user confirmed): NO mounting holes ----------
+// ---------- TMC6300 board (SparkFun dimensions.pdf, user confirmed): NO mounting holes; soldered with headers into the perfboard ----------
 tmc_l          = 20.32;  // 0.80 in
 tmc_w          = 15.24;  // 0.60 in
 tmc_row_gap    = 12.7;   // 0.50 in between the two pin columns, 2.54 mm pitch, 8 pins per column
 
-// ---------- MAX485 module (user confirmed 44 x 14 x 19) ----------
-max485_l = 43.9; max485_w = 14.1; max485_h = 18.9;
+// ---------- MAX485 module (user confirmed 44 x 14; 13 mm tall with pins in the perfboard) ----------
+max485_l       = 43.9;
+max485_w       = 14.1;
 
-// ---------- MT6701 magnet supplied by the user: "4 mm radius, 1.5 mm thick" ----------
-// radius or diameter UNCONFIRMED; must be diametrically magnetised. Where it sits is NOT designed (see docs/open-questions.md).
-mt_magnet_r    = 4;
+// ---------- MT6701 breakout (measured from the user's two photos, scale = 5-pin header pitch 2.54 mm, cross-checked with the SOP8 body) ----------
+mt_board       = 22;     // board is 21.8 x 22.0 mm, chip dead centre
+mt_hole_pitch  = 16.5;   // four holes, about 2.1 mm, on a 16.5 mm square
+mt_hole_d      = 2.1;
+// pins along one edge, 2.54 pitch: VDD, GND, Analog/PWM, SCL, SDA
+// magnet that came with the sensor: 4 mm across (USER), 1.5 mm thick; assumed diametrically magnetised (cannot be tested). Where it sits is NOT designed.
+mt_magnet_d    = 4;
 mt_magnet_t    = 1.5;
 
 // ---------- wall mount ----------
-key_x          = 22;     // keyholes sit on this x so they stay clear of the Nano strip and the corner bosses  PROPOSAL
-key_dx         = 70;     // distance between the two keyholes (vertical)    PROPOSAL
+key_y          = 28;     // two keyholes side by side at this height, slots pointing down (hang it on two screws)  PROPOSAL
+key_dx         = 70;     // distance between the two keyholes (horizontal)  PROPOSAL
 key_head       = 7;      // head hole diameter                               PROPOSAL
 key_slot       = 3.5;    // slot width                                       PROPOSAL
 key_slot_len   = 7;      // PROPOSAL
