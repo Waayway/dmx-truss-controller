@@ -1,0 +1,209 @@
+                 1                                                                                  2                                                                                                   3                                                                                                                 4
+
+
+
+
+                                                                                                                                                  3V3                                                         VCC                  3V3                                                      VCC
+
+                                                                                                                                                              PIR101                 PIR202                   PIR302                         PIR401                PIR502                     PIR602
+                                                                                                                                                                       COR1
+                                                                                                                                                                       R1                     COR2
+                                                                                                                                                                                              R2                       COR3
+                                                                                                                                                                                                                       R3                             COR4
+                                                                                                                                                                                                                                                      R4                    COR5
+                                                                                                                                                                                                                                                                            R5                         COR6
+                                                                                                                                                                                                                                                                                                       R6
+A                                                                                                                                                                      10K                    100R                     10K                            10K                   100R                       10K                     A
+
+           VCC                   COU1
+                                 U1                          3V3
+                                                                                                                                                              PIR102                 PIR201                   PIR301                         PIR402                PIR501                     PIR601
+                              1               5
+            PIC102
+                    COC1
+                     C1
+                           PIU101
+                              2
+                                  VIN VOUT PIU105
+                           PIU102 GND
+                              3               4
+                                                               PIC202
+                                                                       COC2
+                                                                       C2
+                                                                                                                                                                                    1PIU201                                                                        PIU203
+                                                                                                                                                                                                                                                                   3
+                           PIU103 EN    BP PIU104
+            PIC101 1uF                              PIC302     PIC201 100nF                                                                         TP_RST                      5                      6         TP_RESET              LCD_RST                 2                     4             LCD_RESET
+                                 RT9193-33                  COC3
+                                                            C3
+                                                                                                                                                                              PIU205                 PIU206                                                  PIU202                PIU204
+
+
+                                                    PIC301 22nF                                                                                                                     COU2A
+                                                                                                                                                                                    COU2B
+                                                                                                                                                                                    U2A                                                                            U2B
+                                                                                                                                                                                     NDC7002N                                                                      NDC7002N
+           GND
+                                                       GND
+                                                                                                       3V3                                                                                                           COU3
+                                                                                                                                                                                                                      U3
+                                                                                                                                                                                              3V3 LCD_DC           1                20 SPI_DC                                                      VCC
+                                                                                                                                                                         COC4                                           A1     B1 PIU3020
+                                                                                                                                                                                                                              PIU301
+                                                                                                                                                                                                                                                                                                                 COC5
+                                                                                                                                                                         C4   PIC401 PIC402                        2
+                                                                                                                                                                                                               PIU302               19                                                                          C5
+                                                                                                                          COR11
+                                                                                                                          R11        NLTP0SDA           GND                                                             VccA VccB PIU3019                                                               PIC501 PIC502    GND
+                                                                                                                     PIR1102      PIR1101TP_SDA                          104                          LCD_CS       3
+                                                                                                                                                                                                               PIU303   A2
+                                                                                                                                                                                                                                    18 SPI_CS
+                                                                                                                                                                                                                               B2 PIU3018
+                                                                                                                                                                                                                                                                                                                 104
+                                                                                                                          10K                                                                         LCD_SCL PIU304
+                                                                                                                                                                                                                   4                17 SPI_SCL
+                                                                                                                                                                                                                        A3     B3 PIU3017
+
+B
+                                 Power                                                                                    COR10
+                                                                                                                          R10
+                                                                                                                     PIR1002
+                                                                                                                                     NLTP0SCL
+                                                                                                                                  PIR1001TP_SCL
+                                                                                                                                                                                                                   5
+                                                                                                                                                                                                      LCD_MISO PIU305
+                                                                                                                                                                                                      LCD_MOSI PIU306
+                                                                                                                                                                                                                   6
+                                                                                                                                                                                                                        A4
+                                                                                                                                                                                                                        A5
+                                                                                                                                                                                                                                    16 SPI_MISO
+                                                                                                                                                                                                                               B4 PIU3016
+                                                                                                                                                                                                                                    15 SPI_MOSI
+                                                                                                                                                                                                                               B5 PIU3015                                                                                      B
+                                                                                                                          10K                                                                         TP_SDA       7
+                                                                                                                                                                                                               PIU307 A6
+                                                                                                                                                                                                                                    14 I2C_SDA
+                                                                                                                                                                                                                               B6 PIU3014
+                                                                                                                                                                                                      TP_SCL       8
+                                                                                                                                                                                                               PIU308 A7
+                                                                                                                                                                                                                                    13 I2C_SCL
+                                                                                                                                                                                                                               B7 PIU3013
+                                                                                                                                                                                                      TP_INT       9
+                                                                                                                                                                                                               PIU309 A8
+                                                                                                                                                                                                                                    12 I2C_INT
+                                                                                                                                                                                                                               B8 PIU3012
+                                                                                                                                                                                                                  10
+                                                                                                                                                                                                               PIU3010 OE
+                                                                                                                                                                                                                                    11
+                                                                                                                                                                                                                             GND PIU3011
+                                                                                                                                  Level conversion                                                                        3V3      TXB0108PWR
+                                                                                                                                                                                                                                                                   GND
+
+
+
+
+                                                                                                                                                                 COU4
+                                                                                                                                                                 U4
+                                                                                                                                                  GND         1
+                                                                                                                                                           PIU401
+                                                                                                                                                  NLTP0INT          GND
+                                                                                                                                                  TP_INT PIU402
+                                                                                                                                                              2
+                                                                                                                                                                    TP_INT
+                                                                                                                                                  TP_SCL PIU403
+                                                                                                                                                              3
+    COP1                                                                                                                                                            TP_SCL
+    P1                     VCC                                                                                                                    TP_SDA PIU404
+                                                                                                                                                              4
+C                                                                                                                                                 NLTP0RST          TP_SDA                                                                                                                                                     C
+                                                                              LCD_BL                                                              TP_RST PIU405
+                                                                                                                                                              5
+            1 PIP101NLGND                                                                                       COR12
+                                                                                                                R12                                                 TP_RST
+                                                                                PIR1302                                         NLLEDK            NL3V3
+
+                                                                                                                                                                                                                                                                                         W
+                     GND                                                                                                 PIR1201LEDK              3V3         6
+            2 PIP102NLSPI0MISO                                                                             PIR1202                                         PIU406 TP_VDD
+                     SPI_MISO
+            3 PIP103NLSPI0MOSI
+                     SPI_MOSI
+            4 PIP104NLSPI0SCL
+                                                                                      COR13
+                                                                                      R13
+                                                                                          1K      PIQ203        10                                GND
+                                                                                                                                                  3V3
+                                                                                                                                                              7
+                                                                                                                                                           PIU407 GND
+                                                                                                                                                              8
+                                                                                                                                                           PIU408 LCD_VDD                                                                                                                                     aveshare
+                     SPI_SCL                                                    PIR1301 PIQ201              COQ2
+                                                                                                            Q2                                    NLLCD0DC
+                                                                                                                                                  LCD_DC PIU409
+                                                                                                                                                              9
+            5 PIP105NLSPI0CS                                                                                                                                        D/C
+            6 PIP106
+                     SPI_CS                                                     PIR1402                     AO3400                                NLLCD0MOSI
+                                                                                                                                                  LCD_MOSI  10
+                                                                                                                                                           PIU4010 SDA
+                                                                                                                                                                                                                                                                                         COlogo1
+                     NLSPI0DC
+                     SPI_DC
+            7 PIP107NLLCD0RESET
+                     LCD_RESET
+            8 PIP108NLLCD0BL
+                                                                                      COR14
+                                                                                      R14
+                                                                                          10K     PIQ202                                          NLLCD0MISO
+                                                                                                                                                  LCD_MISO
+                                                                                                                                                  NLLCD0SCL
+                                                                                                                                                             11
+                                                                                                                                                           PIU4011 SDO
+                                                                                                                                                  LCD_SCL 12
+                                                                                                                                                           PIU4012 SCL
+                                                                                                                                                                                                                                            1.28inch Touch LCD
+                     LCD_BL
+            9 PIP109NLI2C0SDA                                                   PIR1401                                                           NLLCD0CS
+                                                                                                                                                  LCD_CS 13PIU4013 CS
+                     I2C_SDA                                                                                                                      NLLCD0RST
+                                                                                                                                                  LCD_RSTPIU4014
+                                                                                                                                                            14
+           10 PIP1010                                                                                                                                               RST
+           11 PIP1011
+                     NLI2C0SCL
+                     I2C_SCL                                                                                                                      GND       15
+                                                                                                                                                           PIU4015 GND
+                     NLI2C0INT
+                     I2C_INT                                                                                                                      LEDK      16
+           12 PIP1012NLTP0RESET                                                                                                                            PIU4016 LEDK
+                     TP_RESET                                                                    GND                                              3V3       17
+           13 PIP1013                                                                                                                                      PIU4017 LEDA
+                     GND                                                                                                                          GND       18
+           14 PIP1014                                                                                                                                      PIU4018 GND
+                     GND
+           15 PIP1015
+                                                                                                                                                                         1.28LCD_TP
+     Header 15
+
+D                                                                                                                     Touch LCD                                                                                                                                                                                                D
+
+    Interface
+
+                 1                                                                                  2                                                                                                   3                                                                                                                 4
+                                                                    8104UAP 7104UAP 6104UAP 5104UAP 4104UAP 3104UAP 2104UAP 104UAP 0104UAP 904UAP 804UAP 704UAP 604UAP 504UAP 404UAP 304UAP 204UAP 104UAP
+                                                          101PAP 201PAP 301PAP 401PAP 501PAP 601PAP 701PAP 801PAP 901PAP 0101PAP 1 01PAP 2101PAP 3101PAP
+                                                                                                                               1POC
+                                            4101PAP                                                                                                                                                                      5101PAP
+ 1012345C1APCO20C12453CAP   2021RA1P R1O021CRAP                                                                                                                                                                                       0203UAP 9103UAP 8103UAP7103UAP 6103UAP 5103UAP4103UAP3103UAP 2103UAP 1 03UAP
+301UAP 201UAP 101UAP302QAP                                                                                                                                                                                                                                      3UOC
+      1UOC         2QOC                                                                                                       4UOC
+401UAP 501UAP 102QAP 202QAP
+ 203C3APCO10C3CAP           1031RA1P R2O0311CRoAP golOC                                                                                                                                                                               103UAP 203UAP 303UAP403UAP 503UAP 603UAP703UAP803UAP 903UAP 0103UAP
+                                                                                                                                                                                                                                     105CAP 204CAP 1011RAP 1001RAP
+ 102C2APCO20C2CAP           2041RA1P R 1O041CRAP                                                                                                                                                                                     520C5OCACP 140C4OCACP 21011R1ROACP 200101RROACP
+
+
+                                                                                                      203RAP 206RAP 201RAP                                  402UAP                      302UAP              2001342561RAP 105RAP 102RAP
+                                                                                                      3ROC 6ROC 1ROC                                        502UAP         2UOC 202UAP 4ROC 5ROC 2ROC
+                                                                                                      103RAP 106RAP 101RAP                                  602UAP                      102UAP              1042301651RAP 205RAP 202RAP
+

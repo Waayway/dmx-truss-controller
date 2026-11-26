@@ -30,5 +30,5 @@ Not modelled yet: the 45 degree desk wedge, and the final base with both D-size 
 
 - Nothing is printed. Tolerances (0.2 mm running fits, 0.4 mm gaps) are guesses for a 0.4 mm nozzle.
 - The motor drawing does not say which face is the stator mounting face or which part turns. The hub, plate and column assume the top turns and the bottom mounts. Check on the real motor first.
-- The Waveshare module thickness (3.4 mm used) and carrier pocket depth are estimates.
+- The Waveshare module thickness is 3.575 mm from the Waveshare 2D drawing; the carrier pocket depth is still an estimate.
 - The 10 display wires through the 4.0 mm column bore: free area is enough on paper (12.6 mm2 vs about 9 mm2), but it has not been tried with the real cable.

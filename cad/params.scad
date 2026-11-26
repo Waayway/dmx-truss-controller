@@ -88,7 +88,7 @@ z_ring_bot     = z_ped_top + ring_gap;             // 40.8
 z_ring_top     = z_ring_bot + ring_h;              // 54.0
 // display: glass about 1.5 mm below the ring top
 glass_recess   = 1.5;                              // PROPOSAL
-module_t       = 3.4;                              // pcb + lcd stack. ESTIMATE, not measured on the real module
+module_t       = 3.575;                            // VERIFIED: Waveshare 1.28in 2D drawing, total thickness 3.575 (+-0.15). TP 1.85 + LCM 1.55 + PCB 1.0 are the parts of that stack
 z_module_top   = z_ring_top - glass_recess;
 z_module_bot   = z_module_top - module_t;
 carrier_t      = 4;                                // carrier plate thickness

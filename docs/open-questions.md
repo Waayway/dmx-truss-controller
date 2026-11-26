@@ -11,7 +11,7 @@ Nothing here is blocking the first test, but each item can change a number in th
 - **Cogging.** Nobody published a figure for this motor; the GM5208 and GM3506 were dropped after cogging reports.
 - **Sensor.** Where the magnet sits and the useful air gap (MT6701 likes about 1 to 3 mm) are unknown. `sensor_holder.scad` is a placeholder.
 - **Wires through the bore.** 10 wires in a 4.0 mm column inside a 5.9 mm bore: fits on paper only.
-- **Display module thickness** (3.4 mm used) and carrier pocket depth are estimates.
+- **Display module thickness** is now VERIFIED as 3.575 mm (Waveshare 2D drawing; the 3.4 mm estimate was too thin).
 - **Nano height.** Stack-up assumes low (4 mm) sockets under the Nano; the USB-C slot is 16 x 10 and sits 7.7 to 17.7 mm above the back. If the sockets are taller the assert in `base_usbc.scad` trips.
 - **USB-C plug size.** Slot is for the spec maximum plus margin; your supply's plug was not measured.
 - **Antenna end** of the Nano points at the motor; Wi-Fi range untested.
