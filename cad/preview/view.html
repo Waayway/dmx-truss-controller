@@ -1,0 +1,48 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>STL preview</title>
+<style>html,body{margin:0;background:#fff}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+// Quick STL preview, not a presentation render. Usage (page served from cad/, see scripts/serve.cjs):
+//   /preview/view.html?f=base,layout-ghosts&v=top,iso      f = STL names in cad/stl, v = views (iso, top, bottom, front, side)
+//   &o=x,y,z;x,y,z   optional per-file offsets.  Result: window.__imgs[view] = PNG data URL, window.__done = true
+import * as THREE from 'three';
+import {STLLoader} from 'three/addons/loaders/STLLoader.js';
+const q = new URLSearchParams(location.search);
+const files = (q.get('f')||'').split(',').filter(Boolean);
+const views = (q.get('v')||'iso').split(',');
+const colors = ['#9aa7b8','#e0a030','#4a8fd6','#c0504d','#5aa469','#8a6fb8'];
+const W=1100,H=850;
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+renderer.setSize(W,H);renderer.setPixelRatio(1);document.body.appendChild(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xffffff);
+scene.add(new THREE.HemisphereLight(0xffffff,0x888888,1.1));
+const dl=new THREE.DirectionalLight(0xffffff,1.6);dl.position.set(-120,200,300);scene.add(dl);
+const dl2=new THREE.DirectionalLight(0xffffff,0.6);dl2.position.set(200,-100,100);scene.add(dl2);
+const group=new THREE.Group();scene.add(group);
+const loader=new STLLoader();
+await Promise.all(files.map((f,i)=>new Promise(res=>{
+  loader.load('../stl/'+f+'.stl',g=>{
+    g.computeVertexNormals();
+    const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:colors[i%colors.length],roughness:0.65,metalness:0.0,transparent:f.includes('ghost'),opacity:f.includes('ghost')?0.75:1}));
+    const off=(q.get('o')||'').split(';')[i];
+    if(off){const [x,y,z]=off.split(',').map(Number);m.position.set(x,y,z);}
+    group.add(m);res();
+  });
+})));
+const box=new THREE.Box3().setFromObject(group);
+const c=box.getCenter(new THREE.Vector3()), s=box.getSize(new THREE.Vector3());
+const R=Math.max(s.x,s.y,s.z);
+const cam=new THREE.PerspectiveCamera(30,W/H,1,5000);
+window.__imgs={};
+for(const v of views){
+  const dir={iso:[1,-1.1,0.9],top:[0,0,1],bottom:[0,0,-1],front:[0,-1,0.0001],side:[1,0,0.0001]}[v]||[1,-1,1];
+  const dv=new THREE.Vector3(...dir).normalize();
+  cam.position.copy(c).addScaledVector(dv,R*2.6);
+  if(v==='top'||v==='bottom')cam.up.set(0,1,0);else cam.up.set(0,0,1);
+  cam.lookAt(c);renderer.render(scene,cam);
+  window.__imgs[v]=renderer.domElement.toDataURL('image/png');
+}
+window.__done=true;
+</script></body></html>

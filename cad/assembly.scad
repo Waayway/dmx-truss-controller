@@ -1,6 +1,8 @@
 // Assembly: all parts in place, with a clearance report. For inspection only; print the single files.
 include <params.scad>
-use <base_usbc.scad>
+show_ghosts = false;     // true: also show the USB-C cable, Nano, XLR and perfboard stand-ins
+use <base.scad>
+use <ghosts.scad>
 use <front_plate.scad>
 use <column.scad>
 use <display_carrier.scad>
@@ -24,7 +26,8 @@ assert(z_module_top < z_ring_top,         "display glass sticks out above the ri
 assert(z_module_top > z_ring_top - 4,     "display is recessed more than 4 mm below the ring top");
 assert(col_top_z > z_carrier_bot,         "column does not reach the carrier");
 
-color("#d9dde2") base_usbc();
+color("#d9dde2") base();
+if (show_ghosts) color("#e0a030", 0.6) ghosts();
 color("#c4c7cb") translate([0, 0, z_plate_top - plate_t]) front_plate();
 color("#8a8f96") translate([0, 0, col_foot_z]) column();
 color("#c46d0d") translate([0, 0, z_motor_bot]) difference() { cylinder(d = motor_od, h = motor_body_h); translate([0,0,-1]) cylinder(d = motor_bore, h = 20); }

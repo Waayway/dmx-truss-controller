@@ -21,8 +21,8 @@ module front_plate() {
         // central opening for the column + wires
         translate([0, 0, -1]) cylinder(d = col_od + 2 * fit, h = plate_t + 2);
         // four screw holes at the diagonal corners (match front_bosses in the base)
-        for (a = [45, 135, 225, 315])
-            rotate([0, 0, a]) translate([base_r_corner - 8, 0, -1])
+        for (a = boss_angles)
+            rotate([0, 0, a]) translate([boss_r, 0, -1])
                 cylinder(d = 3.4, h = plate_t + 2, $fn = 32);
         // three M2 pilot holes for the pedestal tabs (match pedestal.scad: radius 21, angles 30/150/270)
         for (a = [30, 150, 270])

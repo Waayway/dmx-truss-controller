@@ -72,3 +72,12 @@ Scaled against the Nano (43.18 mm long = 540 px). Estimates from a hand-held pho
 - Total about 166 mm; the user measured 17 cm, so the scale holds up.
 - The photo shows the cable laid as a U-turn with the Nano alongside the jack body, plug pointing back at the wall. That works physically. An earlier note here claimed no layout fits; that was wrong, the cable's 75 mm lets the U sit deeper than the jack body.
 - The U-turn needs about 95 to 98 mm of depth from the outer wall face (bend radius 14 to 10 mm), so a base of about 101 to 103 mm across flats. The current base is 90 mm. Not modelled yet, rough calculation only.
+
+## Final base (decision 2026-11-24): 115 mm octagon, Neutrik USB-C jack
+
+- The user chose the Neutrik USB-C jack in a bigger base. `cad/base.scad` is 115 x 32 mm with two D-size cutouts: USB-C on the bottom facet (jack 8 mm right of centre), XLR on the right facet.
+- Layout solver (`scripts/usbc-layout.mjs`): no layout fits at 105 mm; 110 mm is the minimum (about 4 mm from cable and Nano to the inner wall); 115 mm leaves about 8 mm. My first estimate of 101 to 103 mm ignored the octagon's chamfered corners and was wrong.
+- The cable is laid as a U-turn (bend radius 12 mm) with the Nano alongside the jack body; Nano antenna end 12 mm off the wall. The Nano's Wi-Fi antenna therefore sits right behind a 2.5 mm PETG wall, which should be fine but is untested.
+- Not placed yet: **TMC6300, MAX485**, the display-wire routing from the column to the Nano, and the **MT6701 sensor and magnet**.
+- The jack stand-in sizes (body 23 mm, strain relief 14 mm, plug 13 x 7.4 mm, flange 3 mm thick) come from a photo and are estimates. Before printing, hold the real jack against a 24.3 mm hole drawn on paper and check the flange against the 31 x 26 mm footprint.
+- Fixed in this round: the front-plate bosses were at the middle of the diagonal walls (half inside the wall) and are now in four corners; the jack pads no longer poke into the plate space.

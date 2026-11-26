@@ -1,13 +1,22 @@
 #!/usr/bin/env bash
-# Clearance check: every turning part vs every fixed part must have an EMPTY intersection.
-# Distinguishes a real "empty" from a compile error. Needs openscad on PATH (or: nix shell nixpkgs#openscad).
+# Clearance check: each pair must have an EMPTY intersection.
+#   hub/ring (turn)  vs pedestal/column/carrier/plate (fixed)
+#   base vs plate    (the corner bosses must stop under the plate)
+#   ghost vs base/plate/column/pedestal  (USB-C cable, Nano, XLR and perfboard must fit inside the base)
+# Tells a real "empty" apart from a compile error, and mere face contact (Volumes: 1) from a real overlap (Volumes: 2+). Needs openscad on PATH (or: nix shell nixpkgs#openscad -c ...).
 set -u
 cd "$(dirname "$0")/../cad"
 fail=0
-for pair in hub-pedestal hub-column hub-carrier hub-plate ring-pedestal ring-column ring-carrier ring-plate; do
-  out=$(openscad -D "pair=\"$pair\"" -o "${TMPDIR:-/tmp}/clearance-check.stl" clearance.scad 2>&1)
+pairs="hub-pedestal hub-column hub-carrier hub-plate ring-pedestal ring-column ring-carrier ring-plate base-plate ghost-base ghost-plate ghost-column ghost-pedestal"
+for pair in $pairs; do
+  a=${pair%-*}; b=${pair#*-}
+  out=$(openscad -D "a=\"$a\"" -D "b=\"$b\"" -o "${TMPDIR:-/tmp}/clearance-check.stl" clearance.scad 2>&1)
   if echo "$out" | grep -q "ERROR"; then echo "ERROR  $pair"; echo "$out" | grep ERROR; fail=1
   elif echo "$out" | grep -q "Current top level object is empty"; then echo "clear  $pair"
-  else echo "HIT    $pair (parts intersect)"; fail=1; fi
+  else
+    vols=$(echo "$out" | sed -n "s/.*Volumes: *\([0-9]*\).*/\1/p" | tail -1)
+    if [ "${vols:-0}" -ge 2 ]; then echo "HIT    $pair (parts overlap, volumes=$vols)"; fail=1
+    else echo "touch  $pair (faces touch, no shared volume)"; fi
+  fi
 done
 exit $fail

@@ -8,15 +8,19 @@ SmartKnob-style: a **fixed round touch display** with a **ring around it that tu
 
 ![assembly](docs/images/cad-assembly.png)
 
+Inside the base (top view, amber = stand-ins for the USB-C jack and cable, Nano, XLR and perfboard strip, used by the clearance check):
+
+![layout](docs/images/cad-layout-top.png)
+
 ## Layout
 
 | Folder | What is in it |
 |---|---|
 | [`bom/`](bom) | Bill of materials: `bom.csv` (source of truth) and generated `BOM.md` with every buy link |
 | [`hardware/`](hardware) | [Pinout and wiring](hardware/pinout.md), [screws and hardware](hardware/screws.md), schematic source |
-| [`cad/`](cad) | OpenSCAD models, exported STL files, [print notes](cad/README.md) |
+| [`cad/`](cad) | OpenSCAD models, exported STL files, [print notes](cad/README.md), STL preview page |
 | [`docs/`](docs) | Plan v4.6 (PDF + markdown), schematic and concept images, [open questions](docs/open-questions.md) |
-| [`scripts/`](scripts) | BOM generator and the clearance check |
+| [`scripts/`](scripts) | BOM generator, clearance check, USB-C cable layout solver, preview server |
 
 ## Rules this design follows
 
@@ -24,7 +28,7 @@ SmartKnob-style: a **fixed round touch display** with a **ring around it that tu
 - The display never turns; only the ring turns.
 - Bare modules, no plastic enclosures. 3D-printed housing in PETG.
 - Dutch/EU shops only.
-- About 7 cm across. The housing is an octagon 90 mm across flats; the ring is 58 mm.
+- About 7 cm across. The housing is an octagon 115 mm across flats and 32 mm deep (the Neutrik USB-C fly-lead needs it, see `cad/README.md`); the ring is 58 mm.
 
 ## Parts at a glance
 

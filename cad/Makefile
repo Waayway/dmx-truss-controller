@@ -1,14 +1,18 @@
 .PHONY: all check clean
 OPENSCAD ?= openscad
-PARTS = base_usbc front_plate column display_carrier rotor_hub ring pedestal sensor_holder clamp_bar
+PARTS = base front_plate column display_carrier rotor_hub ring pedestal sensor_holder
 
-all: $(addprefix stl/,$(addsuffix .stl,$(PARTS))) stl/assembly-preview.stl
+all: $(addprefix stl/,$(addsuffix .stl,$(PARTS))) stl/assembly-preview.stl stl/layout-ghosts.stl
 
 stl/%.stl: %.scad params.scad
 	@mkdir -p stl
 	$(OPENSCAD) -o $@ $<
 
 stl/assembly-preview.stl: assembly.scad params.scad $(addsuffix .scad,$(PARTS))
+	@mkdir -p stl
+	$(OPENSCAD) -o $@ $<
+
+stl/layout-ghosts.stl: ghosts.scad params.scad
 	@mkdir -p stl
 	$(OPENSCAD) -o $@ $<
 
