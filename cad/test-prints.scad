@@ -2,20 +2,8 @@
 // Print these three files. Each is small and quick. (The clearance ring was dropped: test against the real motor instead.)
 include <params.scad>
 
-// column.scad defines these; repeated here so this file stands alone
-col_od = motor_bore + 0.1 - 0.4;   // 5.6
-col_id = col_od - 2 * 0.8;          // 4.0
 
-// -------- 1. Guide tube test: fits the 5.9 mm motor bore, carries display wires --------
-// Outer 5.6 (bore 5.9 +0.1 minus 0.4 clearance), inner 4.0 for ~10 thin wires. 75 mm long.
-module guide_tube() {
-    difference() {
-        cylinder(d = col_od, h = 75);
-        translate([0, 0, -1]) cylinder(d = col_id, h = 77);
-    }
-}
-
-// -------- 2. Short shafts: five loose tubes, push each into the REAL motor bore and spin the motor by hand --------
+// -------- 1. Short shafts: five loose tubes, push each into the REAL motor bore and spin the motor by hand --------
 // OD 5.3 / 5.4 / 5.5 / 5.6 / 5.7, ID 4.0, so the same print also checks the wire space.
 // The height tells them apart: 10 mm = OD 5.3, 11 mm = 5.4, 12 mm = 5.5, 13 mm = 5.6, 14 mm = 5.7. Print standing up, nothing joins them.
 module shafts() {
@@ -26,7 +14,7 @@ module shafts() {
         }
 }
 
-// -------- 3. Brace test: MT6701 board mounting, 28 x 28 plate with the four M2 holes at 16.5 mm --------
+// -------- 2. Brace test: MT6701 board mounting, 28 x 28 plate with the four M2 holes at 16.5 mm --------
 module brace_test() {
     difference() {
         translate([-14, -14, 0]) cube([28, 28, 3]);
@@ -37,8 +25,7 @@ module brace_test() {
     }
 }
 
-// choose which one to export: -D part="guide"|"shafts"|"brace"
+// choose which one to export: -D part="shafts"|"brace"
 part = "guide";
-if (part == "guide") guide_tube();
 if (part == "shafts") shafts();
 if (part == "brace") brace_test();
