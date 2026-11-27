@@ -7,15 +7,18 @@
 $fn = 96;
 
 // ---------- base (octagon) ----------
-base_flat      = 115;    // across flats. 110 is the minimum that fits the USB-C fly-lead (see usbc-layout notes); PROPOSAL
+base_flat      = 180;    // across flats. The 90 degree USB-C cable needs 172 mm at least (scripts/usbc-90.mjs); 180 leaves about 11 mm around the Nano. USER: bigger is fine, the printer is large enough. PROPOSAL
 base_depth     = 40;     // z height. USER: 32 was too low (0.85 mm between the MAX485 top and the sensor board, no room for wires). 40 gives about 4.9 mm. Everything else derives from this. PROPOSAL
 base_wall      = 2.5;    // wall thickness                                 PROPOSAL
 back_plate     = 2.5;    // back plate thickness                           PROPOSAL
 base_r_corner  = base_flat / 2 / cos(22.5);   // circumradius of the octagon
 jack_zc        = base_depth / 2;              // height of both D-size jack axes above the wall
 // front-plate bosses sit in four CORNERS (vertices) of the inner octagon, the four that stay clear of both jacks.
-// The flats are on the axes, so the vertices are at 22.5 + 45k degrees; 67.5 + 90k keeps clear of the jack pads.
-boss_angles    = [67.5, 157.5, 247.5, 337.5];
+// The flats are on the axes, so the vertices are at 22.5 + 45k degrees. The USB-C jack is on the bottom facet (vertices 247.5 and 292.5) and the XLR on the
+// top facet (67.5 and 112.5), so the posts go to the four vertices of the left and right facets. (At 247.5 the old post sat inside the jack body: the clearance check caught it.)
+boss_angles    = [22.5, 157.5, 202.5, 337.5];
+plate_ledge_w  = 3;      // a ledge all round the inside carries the plate edge: the plate spans about 170 mm and is only 2.5 mm thick
+plate_ledge_h  = 3;
 boss_r         = (base_flat / 2 - base_wall) / cos(22.5) - 4.5;   // centre 4.5 mm in from the inner vertex, so the boss merges with both walls
 
 // ---------- pedestal and ring ----------
@@ -100,7 +103,8 @@ pad_h          = 26.5;   // 2.75 .. 29.25 at the jack axis: stays under the fron
 
 xlr_depth      = 29;     // USER: 24 mm plus about 5 mm of solder cups behind the panel
 xlr_body_d     = 23.5;   // ESTIMATE for the clearance ghost (hole is 24.3)
-xlr_along      = 0;      // XLR sits on the right facet, centred
+xlr_along      = 0;      // XLR sits centred on its facet
+xlr_angle      = 180;    // which facet: 0 bottom, 90 right, 180 TOP, 270 left (the USB-C jack is on the bottom one). Solver: top, near the MAX485
 
 // ---------- Neutrik USB-C fly-lead NAUSBC-5G-FL10 (flange front face is the reference) ----------
 usbj_body_len  = 29.4;   // VERIFIED drawing: rigid body behind the flange (+-0.3)
@@ -113,21 +117,19 @@ cab_bend_r     = 12;     // ESTIMATE: bend radius of the cable centreline (user:
 plug_exposed   = 30;     // PHOTO: plug end beyond the Nano port edge (overmold + strain relief), 37 incl. 7 mm inside the port
 plug_w         = 13;     // real USB-C overmolds measured up to 13.0 x 7.4
 plug_h         = 7.4;
-usbc_x         = 4;      // position of the USB-C jack along the BOTTOM facet (scripts/place-modules.mjs: left enough to leave a strip for the MAX485)  PROPOSAL
-nano_pull_in   = 12;     // how far the Nano's antenna end is held off the wall  PROPOSAL (layout solver)
+usbc_x         = -22;    // position of the USB-C jack along the BOTTOM facet (scripts/usbc-90.mjs)  PROPOSAL
+cab_dir        = 1;      // +1: the cable bends toward +x and the Nano lies to the right of the jack axis; -1 is the mirror image
+cab_flex_design = 72;    // design length of the flexible part. Measured 75 (+-3, from photos); designing for 72 keeps the plug in reach if my estimate is high. Extra cable just bows a little
+cab_a          = 46;     // straight run after the jack's stiff end, before the 90 degree bend  PROPOSAL (solver)
 wall_margin    = 1.5;
 
-// derived cable layout (U-turn, Nano alongside the jack body, plug pointing back at the wall)
+// derived cable layout: ONE 90 degree bend, no U-turn. The Nano lies along x with its USB-C port facing the plug.
 usb_yb         = -base_flat / 2 + usbj_stiff;                          // end of the jack's strain relief
-nano_y_end     = -base_flat / 2 + base_wall + wall_margin + nano_pull_in;   // Nano antenna end
-nano_y_port    = nano_y_end + nano_l;                                  // edge of the Nano's USB-C port
-cab_y_end      = nano_y_port + plug_exposed;                           // where plain cable meets the plug
-cab_amb        = cab_y_end - usb_yb;                                   // leg a minus leg b
-cab_apb        = cab_flex - PI * cab_bend_r;                           // leg a plus leg b
-cab_a          = (cab_amb + cab_apb) / 2;                              // straight leg going deeper
-cab_b          = (cab_apb - cab_amb) / 2;                              // straight leg coming back
-nano_x         = usbc_x - 2 * cab_bend_r;                              // Nano is to the LEFT of the jack
-assert(cab_b >= 0, "cable is too short for this layout: reduce nano_pull_in or the bend radius");
+cab_b          = cab_flex_design - cab_a - PI / 2 * cab_bend_r;        // straight run after the bend
+assert(cab_b >= 3, "the cable is too short for this layout: reduce cab_a or the bend radius");
+cab_row        = usb_yb + cab_a + cab_bend_r;                          // y of the plug and of the Nano's axis
+nano_port_x    = usbc_x + cab_dir * (cab_bend_r + cab_b + plug_exposed);   // x of the Nano's port edge
+nano_far_x     = nano_port_x + cab_dir * nano_l;                       // x of the Nano's antenna end
 
 // perfboard pieces, all cut from the user's 5 x 7 cm board; each rests on a rim frame (no screws, hot glue)
 board_rim      = 1.2;    // width of the rim frame under the board edge; pin pads stay inside it
@@ -137,17 +139,17 @@ board_top_z    = jack_zc - nano_port_axis;                             // so the
 board_z        = board_top_z - board_t;                                // underside of every perfboard piece
 post_h         = board_z - back_plate;                                 // rim frame height
 mod_h          = 13;     // USER: height of a module with its pins soldered into the perfboard, measured from the board top
-// piece A carries the Nano
-boardA_w       = nano_w + 2.2;
-boardA_l       = nano_l + 3;
-boardA_cx      = nano_x;
-boardA_y0      = nano_y_end - 1.5;
-// piece B1 carries the MAX485, standing vertically beside the cable leg (scripts/place-modules.mjs)
-max485_cx      = 16.5;
-max485_cy      = 21.5;
-// piece B2 carries the TMC6300, lower right, long side along x
-tmc_cx         = 29.5;
-tmc_cy         = -22.5;
+// piece A carries the Nano, lying along x (centre, outline in lib.scad)
+boardA_cx      = (nano_port_x + nano_far_x) / 2;
+boardA_cy      = cab_row;
+// piece B1 carries the MAX485: rotation 0 = long side along y, 90 = long side along x (scripts/usbc-90.mjs)
+max485_cx      = 0;
+max485_cy      = 48;
+max485_rot     = 90;
+// piece B2 carries the TMC6300: rotation 0 = long side along x, 90 = long side along y. Right under the motor-lead slot (270 degrees, radius 20)
+tmc_cx         = 0;
+tmc_cy         = -21;
+tmc_rot        = 90;
 
 // ---------- TMC6300 board (SparkFun dimensions.pdf, user confirmed): NO mounting holes; soldered with headers into the perfboard ----------
 tmc_l          = 20.32;  // 0.80 in
@@ -168,7 +170,7 @@ mt_magnet_d    = 4;
 mt_magnet_t    = 1.5;
 
 // ---------- wall mount ----------
-key_y          = 28;     // two keyholes side by side at this height, slots pointing down (hang it on two screws)  PROPOSAL
+key_y          = 52;     // two keyholes side by side at this height, slots pointing down. Moved up from 28: the Nano piece now sits at y 12 to 32 on the right  PROPOSAL
 key_dx         = 70;     // distance between the two keyholes (horizontal)  PROPOSAL
 key_head       = 7;      // head hole diameter                               PROPOSAL
 key_slot       = 3.5;    // slot width                                       PROPOSAL
@@ -205,4 +207,4 @@ assert(plate_t - boss_proud >= 0.2, "the magnet boss would reach the foot: thick
 col_top_z      = z_carrier_bot + (carrier_t - pocket_h) - 0.2;   // 0.2 mm below the pocket floor
 
 echo(str("base ", base_flat, " x ", base_depth, "  jack axis z=", jack_zc, "  perfboard underside z=", board_z, "  post_h=", post_h));
-echo(str("cable legs a=", cab_a, " b=", cab_b, "  Nano x=", nano_x, "  Nano y=", nano_y_end, "..", nano_y_port));
+echo(str("cable: jack x=", usbc_x, " a=", cab_a, " bend r=", cab_bend_r, " b=", cab_b, "  Nano row y=", cab_row, "  port edge x=", nano_port_x, " far end x=", nano_far_x));

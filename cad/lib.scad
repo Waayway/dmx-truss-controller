@@ -21,7 +21,17 @@ module board_frame(cx, cy, w, l, c = [0, 0, 0, 0]) {
         }
 }
 
-// the three perfboard pieces: [centre x, centre y, width, length, chamfers]
-function pieceA() = [boardA_cx, boardA_y0 + boardA_l / 2, boardA_w, boardA_l, [board_chamfer, 0, 0, 0]];
-function pieceB1() = [max485_cx, max485_cy, max485_w + 2 * board_pad, max485_l + 2 * board_pad, [0, 0, 0, 0]];
-function pieceB2() = [tmc_cx, tmc_cy, tmc_l + 2 * board_pad, tmc_w + 2 * board_pad, [0, board_chamfer, 0, 0]];
+// Frame of one facet: origin on the OUTER face at position `along` and height `zc`;
+// local x runs along the facet, local +y points INTO the base, local z is up.
+// ang 0 = bottom facet, 90 = right facet, 180 = top, 270 = left.
+module on_facet(ang, along, zc) {
+    rotate([0, 0, ang]) translate([along, -base_flat / 2, zc]) children();
+}
+
+// the three perfboard pieces: [centre x, centre y, width (x), length (y), chamfers bl, br, tr, tl]
+// A: the Nano lies along x; the two corners at its far end are sawn off
+function pieceA() = [boardA_cx, boardA_cy, nano_l + 3, nano_w + 2.2, cab_dir > 0 ? [0, board_chamfer, board_chamfer, 0] : [board_chamfer, 0, 0, board_chamfer]];
+function pieceB1() = max485_rot == 0 ? [max485_cx, max485_cy, max485_w + 2 * board_pad, max485_l + 2 * board_pad, [0, 0, 0, 0]]
+                                     : [max485_cx, max485_cy, max485_l + 2 * board_pad, max485_w + 2 * board_pad, [0, 0, 0, 0]];
+function pieceB2() = tmc_rot == 0 ? [tmc_cx, tmc_cy, tmc_l + 2 * board_pad, tmc_w + 2 * board_pad, [0, board_chamfer, 0, 0]]
+                                  : [tmc_cx, tmc_cy, tmc_w + 2 * board_pad, tmc_l + 2 * board_pad, [0, 0, 0, 0]];

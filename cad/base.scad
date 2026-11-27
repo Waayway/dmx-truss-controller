@@ -3,7 +3,7 @@
 //
 // Looking into the open base (wall plate behind): +x right, +y up, +z towards the viewer.
 //   bottom facet : Neutrik USB-C jack (fly-lead plugs into the Nano, laid as a U-turn, see ghosts.scad)
-//   right facet  : XLR jack
+//   XLR facet    : see xlr_angle in params.scad (top, so the XLR sits next to the MAX485)
 // The hanging direction is "down" = the bottom facet, so the USB-C cable hangs towards the floor on a wall.
 include <params.scad>
 include <lib.scad>
@@ -11,13 +11,6 @@ include <lib.scad>
 module octagon(across_flats, h) {
     r = across_flats / 2 / cos(22.5);
     rotate([0, 0, 22.5]) cylinder(r = r, h = h, $fn = 8);
-}
-
-// Frame of one facet: origin on the OUTER face at position `along` and height `zc`;
-// local x runs along the facet, local +y points INTO the base, local z is up.
-// ang 0 = bottom facet, 90 = right facet, 180 = top, 270 = left.
-module on_facet(ang, along, zc) {
-    rotate([0, 0, ang]) translate([along, -base_flat / 2, zc]) children();
 }
 
 module d_pad() {                       // extra wall on the inside for the nut traps
@@ -55,8 +48,14 @@ module base() {
                 octagon(base_flat, base_depth);
                 translate([0, 0, back_plate]) octagon(inner, base_depth);
             }
+            // ledge under the plate edge, all round
+            translate([0, 0, z_plate_top - plate_t - plate_ledge_h])
+                difference() {
+                    octagon(inner + 0.2, plate_ledge_h);
+                    translate([0, 0, -1]) octagon(inner - 2 * plate_ledge_w, plate_ledge_h + 2);
+                }
             on_facet(0, usbc_x, jack_zc) d_pad();
-            on_facet(90, xlr_along, jack_zc) d_pad();
+            on_facet(xlr_angle, xlr_along, jack_zc) d_pad();
 
             // rim frames under the three perfboard pieces (A: Nano, B1: MAX485, B2: TMC6300). The board edge rests on a 1.2 mm wall,
             // so the solder pads and pin tips in the middle stay free. The boards are held with hot glue or a drop of epoxy.
@@ -71,7 +70,7 @@ module base() {
         }
 
         on_facet(0, usbc_x, jack_zc) d_cut();
-        on_facet(90, xlr_along, jack_zc) d_cut();
+        on_facet(xlr_angle, xlr_along, jack_zc) d_cut();
 
         // two keyholes through the back plate, side by side, slots pointing down
         for (sx = [-1, 1])

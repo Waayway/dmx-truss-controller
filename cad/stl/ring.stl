@@ -4913,6 +4913,20 @@ solid ring
       vertex -21.0869 -4.19444 0
     endloop
   endfacet
+  facet normal 0.999465 -0.0326955 0
+    outer loop
+      vertex -21.5 0 13.2
+      vertex -21.454 1.40617 0
+      vertex -21.454 1.40617 13.2
+    endloop
+  endfacet
+  facet normal 0.999465 -0.0326955 0
+    outer loop
+      vertex -21.454 1.40617 0
+      vertex -21.5 0 13.2
+      vertex -21.5 0 0
+    endloop
+  endfacet
   facet normal -0.956942 0.29028 0
     outer loop
       vertex 20.359 -6.91095 0
@@ -5711,6 +5725,20 @@ solid ring
       vertex -19.2828 9.50921 0
     endloop
   endfacet
+  facet normal 0.973874 0.227091 0
+    outer loop
+      vertex -20.7674 -5.56461 13.2
+      vertex -21.0869 -4.19444 0
+      vertex -21.0869 -4.19444 13.2
+    endloop
+  endfacet
+  facet normal 0.973874 0.227091 0
+    outer loop
+      vertex -21.0869 -4.19444 0
+      vertex -20.7674 -5.56461 13.2
+      vertex -20.7674 -5.56461 0
+    endloop
+  endfacet
   facet normal 0.162908 -0.986641 0
     outer loop
       vertex -4.19444 21.0869 0
@@ -6299,20 +6327,6 @@ solid ring
       vertex 19.8634 -8.22769 13.2
     endloop
   endfacet
-  facet normal 0.973874 0.227091 0
-    outer loop
-      vertex -20.7674 -5.56461 13.2
-      vertex -21.0869 -4.19444 0
-      vertex -21.0869 -4.19444 13.2
-    endloop
-  endfacet
-  facet normal 0.973874 0.227091 0
-    outer loop
-      vertex -21.0869 -4.19444 0
-      vertex -20.7674 -5.56461 13.2
-      vertex -20.7674 -5.56461 0
-    endloop
-  endfacet
   facet normal 0.910877 0.412678 0
     outer loop
       vertex -19.2828 -9.50921 13.2
@@ -6339,20 +6353,6 @@ solid ring
       vertex -21.3161 2.80631 0
       vertex -21.454 1.40617 13.2
       vertex -21.454 1.40617 0
-    endloop
-  endfacet
-  facet normal 0.999465 -0.0326955 0
-    outer loop
-      vertex -21.5 0 13.2
-      vertex -21.454 1.40617 0
-      vertex -21.454 1.40617 13.2
-    endloop
-  endfacet
-  facet normal 0.999465 -0.0326955 0
-    outer loop
-      vertex -21.454 1.40617 0
-      vertex -21.5 0 13.2
-      vertex -21.5 0 0
     endloop
   endfacet
   facet normal 0.849226 -0.52803 0
@@ -6649,6 +6649,20 @@ solid ring
       vertex 0 26.1 12.6
     endloop
   endfacet
+  facet normal 0.13059 0.991437 -0
+    outer loop
+      vertex 0 23.9 12.6
+      vertex -0.2847 23.9375 13.2
+      vertex 0 23.9 13.2
+    endloop
+  endfacet
+  facet normal 0.13059 0.991437 0
+    outer loop
+      vertex -0.2847 23.9375 13.2
+      vertex 0 23.9 12.6
+      vertex -0.2847 23.9375 12.6
+    endloop
+  endfacet
   facet normal 0 0 1
     outer loop
       vertex 1.06252 25.2847 12.6
@@ -6899,20 +6913,6 @@ solid ring
       vertex -0.952627 24.45 12.6
       vertex -0.777817 24.2222 13.2
       vertex -0.777817 24.2222 12.6
-    endloop
-  endfacet
-  facet normal 0.13059 0.991437 -0
-    outer loop
-      vertex 0 23.9 12.6
-      vertex -0.2847 23.9375 13.2
-      vertex 0 23.9 13.2
-    endloop
-  endfacet
-  facet normal 0.13059 0.991437 0
-    outer loop
-      vertex -0.2847 23.9375 13.2
-      vertex 0 23.9 12.6
-      vertex -0.2847 23.9375 12.6
     endloop
   endfacet
   facet normal 0.608738 -0.793372 0

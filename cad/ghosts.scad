@@ -1,6 +1,6 @@
 // Clearance ghosts: render-only stand-ins for the parts that live INSIDE the base, so the layout can be checked
 // numerically (clearance.scad) and viewed. Not printed.
-//   - Neutrik USB-C jack with its fly-lead, laid as a U-turn (jack body, strain relief, cable, plug)
+//   - Neutrik USB-C jack with its fly-lead, laid with one 90 degree bend (jack body, strain relief, cable, plug)
 //   - Neutrik XLR jack
 //   - Arduino Nano ESP32 with its header pins, perfboard strip A
 include <params.scad>
@@ -17,26 +17,28 @@ module usbc_jack() {                       // jack body, strain relief, flange (
         cube([d_flange_along, d_flange_t, d_flange_z]);
 }
 
-module usbc_cable() {                      // leg a, half circle, leg b: centreline of the flexible part
+module usbc_cable() {                      // leg a, quarter circle, leg b: centreline of the flexible part
     cy = usb_yb + cab_a;
-    cx = usbc_x - cab_bend_r;
+    cx = usbc_x + cab_dir * cab_bend_r;
     seg([usbc_x, usb_yb, jack_zc], [usbc_x, cy, jack_zc]);
-    for (t = [0 : 10 : 170])
-        seg([cx + cab_bend_r * cos(t),      cy + cab_bend_r * sin(t),      jack_zc],
-            [cx + cab_bend_r * cos(t + 10), cy + cab_bend_r * sin(t + 10), jack_zc]);
-    seg([nano_x, cy, jack_zc], [nano_x, cy - cab_b, jack_zc]);
+    for (t = [0 : 10 : 80])
+        seg([cx - cab_dir * cab_bend_r * cos(t),      cy + cab_bend_r * sin(t),      jack_zc],
+            [cx - cab_dir * cab_bend_r * cos(t + 10), cy + cab_bend_r * sin(t + 10), jack_zc]);
+    seg([cx, cab_row, jack_zc], [cx + cab_dir * cab_b, cab_row, jack_zc]);
 }
 
-module usbc_plug() {                       // stiff plug end, from the cable end down to the Nano port
-    translate([nano_x - plug_w / 2, nano_y_port, jack_zc - plug_h / 2]) cube([plug_w, plug_exposed, plug_h]);
+module usbc_plug() {                       // stiff plug end, from the end of the plain cable to the Nano port
+    x0 = min(nano_port_x, nano_port_x - cab_dir * plug_exposed);
+    translate([x0, cab_row - plug_w / 2, jack_zc - plug_h / 2]) cube([plug_exposed, plug_w, plug_h]);
 }
 
-module nano() {
+module nano() {                            // lies along x, USB-C port at nano_port_x
     z0 = board_top_z + nano_hdr_h;
-    translate([nano_x - nano_w / 2, nano_y_end, z0]) cube([nano_w, nano_l, nano_pcb_t]);                       // pcb
-    translate([nano_x - 4.5, nano_y_port - 7.3, z0 + nano_pcb_t]) cube([9, 7.3, nano_usbc_h]);                 // USB-C receptacle
-    for (sx = [-1, 1])                                                                                         // header rows
-        translate([nano_x + sx * 7.62 - 1.3, nano_y_end + 1, board_top_z]) cube([2.6, nano_l - 2, nano_hdr_h]);
+    x0 = min(nano_port_x, nano_far_x);
+    translate([x0, cab_row - nano_w / 2, z0]) cube([nano_l, nano_w, nano_pcb_t]);                                 // pcb
+    translate([cab_dir > 0 ? nano_port_x : nano_port_x - 7.3, cab_row - 4.5, z0 + nano_pcb_t]) cube([7.3, 9, nano_usbc_h]);   // USB-C receptacle
+    for (sy = [-1, 1])                                                                                            // header rows
+        translate([x0 + 1, cab_row + sy * 7.62 - 1.3, board_top_z]) cube([nano_l - 2, 2.6, nano_hdr_h]);
 }
 
 module piece(p) { translate([0, 0, board_z]) linear_extrude(board_t) board2d(p[0], p[1], p[2], p[3], p[4]); }
@@ -44,13 +46,14 @@ module boardA() { piece(pieceA()); }
 module boardB() { piece(pieceB1()); piece(pieceB2()); }
 
 // modules stand mod_h (13 mm, user: with pins soldered in) above the board top
-module max485() { translate([max485_cx - max485_w / 2, max485_cy - max485_l / 2, board_top_z]) cube([max485_w, max485_l, mod_h]); }
-module tmc6300() { translate([tmc_cx - tmc_l / 2, tmc_cy - tmc_w / 2, board_top_z]) cube([tmc_l, tmc_w, mod_h]); }
+module max485() { w = max485_rot == 0 ? max485_w : max485_l; l = max485_rot == 0 ? max485_l : max485_w; translate([max485_cx - w / 2, max485_cy - l / 2, board_top_z]) cube([w, l, mod_h]); }
+module tmc6300() { w = tmc_rot == 0 ? tmc_l : tmc_w; l = tmc_rot == 0 ? tmc_w : tmc_l; translate([tmc_cx - w / 2, tmc_cy - l / 2, board_top_z]) cube([w, l, mod_h]); }
 
-module xlr_jack() {                        // on the RIGHT facet, body runs inward (-x)
-    translate([base_flat / 2 - xlr_depth, xlr_along, jack_zc]) rotate([0, 90, 0]) cylinder(d = xlr_body_d, h = xlr_depth);
-    translate([base_flat / 2, xlr_along - d_flange_along / 2, jack_zc - d_flange_z / 2])
-        cube([d_flange_t, d_flange_along, d_flange_z]);
+module xlr_jack() {                        // on the XLR facet (xlr_angle), body runs inward
+    on_facet(xlr_angle, xlr_along, jack_zc) {
+        rotate([-90, 0, 0]) cylinder(d = xlr_body_d, h = xlr_depth);
+        translate([-d_flange_along / 2, -d_flange_t, -d_flange_z / 2]) cube([d_flange_along, d_flange_t, d_flange_z]);
+    }
 }
 
 // MT6701 board under the motor, as designed in column.scad: centred on the axis, header pads on the +y edge.
