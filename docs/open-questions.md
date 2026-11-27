@@ -58,7 +58,7 @@ Not started. Plan: ESP32 Arduino core, SimpleFOC for detents, LVGL for the UI, `
 - **Nano:** user measured about 15 mm tall with headers. Unclear if that includes the pins below the plastic spacer; asked.
 - **XLR jack:** 24 mm plus about 5 mm of solder cups = about 29 mm behind the panel.
 - **Neutrik USB-C jack:** the drawing gives a 29.4 mm rigid body (flange 26 x 31) and a 100 mm cable (L) between the strain reliefs. The user measures 50 mm from the flange front to where the plain cable starts (about 1-2 cm of that is strain relief). **That 50 mm is stiff and cannot bend**, so an XLR (29 mm) and this jack (50 mm) cannot face each other across the 85 mm inside of the base. They need facets about 90 degrees apart. Total jack length (flange to plug tip) still to be measured: the drawing suggests more than the "10 cm total" the user quoted.
-- **Motor:** 3-wire lead leaves between two of the three screw holes (plate slot rotated to 30 degrees).
+- **Motor:** 3-wire lead leaves between two of the three screw holes (plate slot at `motor_lead_angle`, now 270 degrees).
 - **TMC6300 (SparkFun drawing):** 20.3 x 15.2 mm (0.80 x 0.60 in), no mounting holes, two 8-pin columns 12.7 mm apart at 2.54 mm pitch.
 - **MAX485:** 44 x 14 x 19 mm, confirmed.
 - **MT6701 magnet (user supplied):** 4 mm radius (maybe diameter) x 1.5 mm. **Open design problem:** a disc magnet must sit exactly over the sensor chip on the motor axis, but the column with the display wires occupies the axis (and the 5.9 mm bore). Where the magnet and sensor go is not designed yet.
@@ -104,7 +104,7 @@ Scaled against the Nano (43.18 mm long = 540 px). Estimates from a hand-held pho
 - **Wires:** the tube ends in a Ø4 hole through the foot's 0.8 mm roof into a 6.6 mm wide, 2.35 mm high groove that runs over the chip toward -y, the Nano side (it first ran toward -x, which left only 0.2 mm of wall to a motor-screw counterbore). The wires lie flat in it (about 0.5 mm of height, 30 AWG wire-wrap) and leave the foot edge. Not tested with real wires.
 - **Alignment:** the foot is located on the motor by the three M1.6 screws (tight 1.8 mm holes; the plate holes are loose, 2.4), and the board on the foot by two M2 screws, so the chip should land within about 0.2 mm of the axis. Estimate, not measured.
 - **Board orientation:** header pads on the +y edge, wires soldered on the back, no header. R1, R2 and C1 (0.6 to 0.8 mm) sit under a 0.9 mm relief. Two screws on the +y side; the -y holes are within 3 mm of the motor screws. A pad on the -y edge stops the board from tilting.
-- **Lead:** the motor lead leaves between two screw holes at 30 degrees: a 5 x 1.2 mm groove in the plate top, then a through slot at r 17 to 24 (outside the foot). The pedestal tabs and their plate holes moved from 30/150/270 to 90/210/330 degrees; the old tab at 30 degrees sat right in the lead slot (existing bug).
+- **Lead:** the motor lead leaves between two screw holes, at 270 degrees (`motor_lead_angle`; the motor is turned 240 degrees from the first drawing so the lead leaves toward the TMC6300 and does not cross the MAX485): a 5 x 1.2 mm groove in the plate top, then a through slot at r 17 to 24 (outside the foot). The pedestal tabs and their plate holes moved from 30/150/270 to 90/210/330 degrees; the old tab at 30 degrees sat right in the lead slot (existing bug).
 - **No root fillet** on the column any more: the boss is right above the foot. The tube root is the weak point; it is not tested.
 - `sensor_holder.scad` and the brace test plate are obsolete. Screws now: M1.6 x 8 (3), M2 x 4 self-tapping (2).
 
@@ -112,5 +112,6 @@ Scaled against the Nano (43.18 mm long = 540 px). Estimates from a hand-held pho
 
 - User said the 32 mm base was too low. At 32 mm the MAX485 top (z 23.9) stopped 0.85 mm under the sensor board (z 24.75), with no room for wires. \`base_depth\` is now 40: the gap is about 4.9 mm. The jack axis moves up to z = 20 (it is half the depth) and the perfboard rim frames are 10.8 mm tall; everything on the turning side shifts up by 8 mm. All 24 clearance pairs pass at 40 mm. This is my proposal, not a measured need: it is one number in \`cad/params.scad\`.
 - The sensor board wire groove now leaves toward -y (the Nano side) instead of -x, because the motor-screw counterbore at 210 degrees left only 0.2 mm of wall to it.
+- Wiring picture: `docs/images/base-plan.png` (drawn from the CAD by `scripts/plan-svg.mjs`; re-run it after changing params.scad).
 - Assembly order matters: motor + column foot + plate first (the motor screws are under the foot), the MT6701 board last (it covers the screw heads), soldered with wires on the back.
 - Open: \`boss_proud\` (2.2 from the datasheet) must be measured on the real motor. The foot is \`boss_proud + 0.95\` thick; below about 2.1 mm the roof over the chip pocket gets thinner than 0.7 mm and the build stops with an assert.

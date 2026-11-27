@@ -23,13 +23,13 @@ module front_plate() {
         for (a = boss_angles)
             rotate([0, 0, a]) translate([boss_r, 0, -1])
                 cylinder(d = 3.4, h = plate_t + 2, $fn = 32);
-        // three M2 pilot holes for the pedestal tabs (match pedestal.scad: radius 21, angles 90/210/330, so the lead slot at 30 degrees stays free)
+        // three M2 pilot holes for the pedestal tabs (match pedestal.scad: radius 21, angles 90/210/330, so the lead slot at motor_lead_angle stays free)
         for (a = [90, 210, 330])
             rotate([0, 0, a]) translate([21, 0, -1]) cylinder(d = 1.7, h = plate_t + 2, $fn = 32);
-        // motor lead: it leaves the stator face between two screw holes (user), at 30 degrees. A 5 mm wide, 1.2 mm deep groove in the plate TOP
+        // motor lead: it leaves the stator face between two screw holes (user), at motor_lead_angle (270: the motor is turned so it leaves toward the TMC6300). A 5 mm wide, 1.2 mm deep groove in the plate TOP
         // carries it out from under the motor, then a through slot at radius 17..24 (outside the column foot, r 14.5) lets it drop into the base.
-        rotate([0, 0, 30]) translate([6, -2.5, plate_t - 1.2]) cube([14, 5, 2]);
-        rotate([0, 0, 30]) translate([17, -4, -1]) cube([7, 8, plate_t + 2]);
+        rotate([0, 0, motor_lead_angle]) translate([6, -2.5, plate_t - 1.2]) cube([14, 5, 2]);
+        rotate([0, 0, motor_lead_angle]) translate([17, -4, -1]) cube([7, 8, plate_t + 2]);
         // three M1.6 clearance holes on the 20.5 pitch circle (datasheet), 120 degrees apart
         for (i = [0 : motor_hole_n - 1])
             rotate([0, 0, i * 360 / motor_hole_n + 90]) translate([motor_hole_pcd / 2, 0, -1])

@@ -53,6 +53,9 @@ col_id         = col_od - 2 * col_wall;     // 4.0 for wires; NOT yet tested wit
 // Ø11.5 ring magnet on the SAME face as the three M1.6 holes and the lead slot. That face is mounted DOWN on the plate; the rotor's other
 // face is flat with the bore bushing flush, and the hub goes on that one. The earlier CAD had the boss on top: that was wrong.
 // USER TO CONFIRM on the real motor: boss, three screw holes and lead slot on one face, the other face flat.
+// The three motor screw holes are 120 degrees apart, so the motor can be turned in 120 degree steps. The lead leaves BETWEEN two holes: 30, 150 or 270.
+// 270 = toward the USB-C wall, so the lead runs to the TMC6300 without crossing the MAX485 (30 put it right over the MAX485).
+motor_lead_angle = 270;
 boss_proud     = 2.2;    // how far the magnet boss sticks out below the screw face. DATASHEET: 15.0 total - 12.8 body. UNVERIFIED on the part: measure it.
 // MT6701 datasheet (Rev 1.5, magntek): air gap magnet to chip surface 0.5 min / 1.0 typ / 2.0 MAX mm; sensing centre within 0.3 mm of the magnet axis.
 sens_gap       = 1.7;    // PROPOSAL: boss bottom to chip top. Leaves 0.3 mm to the 2.0 mm maximum.
