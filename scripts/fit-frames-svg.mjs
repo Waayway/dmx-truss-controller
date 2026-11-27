@@ -1,0 +1,41 @@
+// Labelled picture of the two fit-test frames, drawn from the same numbers as cad/fit-frame.scad.
+// usage: nix shell nixpkgs#librsvg -c node scripts/fit-frames-svg.mjs      -> docs/images/fit-frames.svg + .png
+import fs from 'fs';
+import path from 'path';
+import { spawnSync } from 'child_process';
+import { bestLayout, placeModules, wallSlack, MX_W, MX_L, TM_L, TM_W, WALL } from './lib-cable.mjs';
+const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const specs = [{ size: 170, phi: 90, flex: 72, clr: 3, title: '170 mm, cable turns 90 degrees' }, { size: 140, phi: 145, flex: 75, clr: 2, title: '140 mm, cable turns 145 degrees' }];
+const S = 3.3, W = 1600, H = 960, F = 'font-family="DejaVu Sans, Arial, sans-serif"';
+let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#fff"/>`;
+const T = (x, y, s, sz = 20, o = {}) => `<text x="${x}" y="${y}" ${F} font-size="${sz}" fill="${o.fill || '#111'}" font-weight="${o.b ? 700 : 400}" text-anchor="${o.a || 'middle'}">${s}</text>`;
+svg += T(W / 2, 40, 'The two fit-test frames, as printed (looking down). Lay your real parts on the outlines.', 28, { b: 1 });
+specs.forEach((sp, k) => {
+  const L = bestLayout(sp.size, sp.phi, sp.flex, sp.clr), P = placeModules(sp.size, L, sp.clr);
+  const CX = 400 + k * 800, CY = 485, X = x => (CX + x * S).toFixed(1), Y = y => (CY - y * S).toFixed(1);
+  const poly = (pts, st) => `<polygon points="${pts.map(p => X(p[0]) + ',' + Y(p[1])).join(' ')}" ${st}/>`;
+  const rect = (r, st) => poly([[r.x0, r.y0], [r.x1, r.y0], [r.x1, r.y1], [r.x0, r.y1]], st);
+  const oct = af => { const rr = af / 2 / Math.cos(Math.PI / 8); return [...Array(8)].map((_, i) => { const a = (22.5 + 45 * i) * Math.PI / 180; return [rr * Math.cos(a), rr * Math.sin(a)]; }); };
+  svg += T(CX, 100, sp.title, 28, { b: 1 });
+  svg += poly(oct(sp.size), 'fill="#e9ecef" stroke="#555" stroke-width="4"') + poly(oct(sp.size - 2 * WALL), 'fill="#fff" stroke="#999" stroke-width="2"');
+  svg += `<clipPath id="oc${k}"><polygon points="${oct(sp.size).map(p => X(p[0]) + ',' + Y(p[1])).join(' ')}"/></clipPath><g clip-path="url(#oc${k})"><circle cx="${X(L.jx)}" cy="${Y(-sp.size / 2 + 2)}" r="${12.15 * S}" fill="#fff" stroke="#555" stroke-width="3"/><circle cx="${X(0)}" cy="${Y(sp.size / 2 - 2)}" r="${12.15 * S}" fill="#fff" stroke="#555" stroke-width="3"/></g>`;
+  svg += T(X(L.jx), Y(-sp.size / 2 - 5), 'USB-C jack (bottom wall)', 16, { b: 1 }) + T(X(0), Y(sp.size / 2 + 4), 'XLR hole (top wall)', 16, { b: 1 });
+  svg += rect({ x0: L.jx - 11.5, x1: L.jx + 11.5, y0: -sp.size / 2, y1: -sp.size / 2 + 29.4 }, 'fill="#cfd3d9" stroke="#777" stroke-width="2"') + rect({ x0: L.jx - 7, x1: L.jx + 7, y0: -sp.size / 2 + 29.4, y1: L.yb }, 'fill="#b9bec6" stroke="#777" stroke-width="2"');
+  svg += T(X(L.jx), Y(-sp.size / 2 + 36), 'stiff jack end', 14, { fill: '#333' });
+  const d = L.pts.map((p, i) => (i ? 'L ' : 'M ') + X(p[0]) + ' ' + Y(p[1])).join(' ');
+  svg += `<path d="${d}" fill="none" stroke="#222" stroke-width="${2.3 * 2 * S}" opacity="0.35" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="#000" stroke-width="3"/>`;
+  svg += poly(L.plug, 'fill="#9aa0a8" stroke="#333" stroke-width="2"') + poly(L.nano, 'fill="#9fd8b0" stroke="#1d5c36" stroke-width="3"');
+  const mxw = P.mx.rot === 0 ? MX_W : MX_L, mxl = P.mx.rot === 0 ? MX_L : MX_W, tmw = P.tm.rot === 0 ? TM_L : TM_W, tml = P.tm.rot === 0 ? TM_W : TM_L;
+  svg += rect({ x0: P.mx.x - mxw / 2, x1: P.mx.x + mxw / 2, y0: P.mx.y - mxl / 2, y1: P.mx.y + mxl / 2 }, 'fill="#9fd8b0" stroke="#1d5c36" stroke-width="3"');
+  svg += rect({ x0: P.tm.x - tmw / 2, x1: P.tm.x + tmw / 2, y0: P.tm.y - tml / 2, y1: P.tm.y + tml / 2 }, 'fill="#9fd8b0" stroke="#1d5c36" stroke-width="3"');
+  const mid = pts => pts.reduce((a, p) => [a[0] + p[0] / pts.length, a[1] + p[1] / pts.length], [0, 0]);
+  const nc = mid(L.nano), pc = mid(L.plug);
+  svg += T(X(nc[0]), Y(nc[1]) + 6, 'NANO', 18, { b: 1 }) + T(X(P.mx.x), Y(P.mx.y) + 6, 'MAX485', 16, { b: 1 }) + T(X(P.tm.x), Y(P.tm.y) + 6, 'TMC6300', 15, { b: 1 });
+  svg += T(X(pc[0]), Y(pc[1]) - 12, 'plug', 14);
+  svg += T(CX, 850, `Nano end: ${wallSlack(sp.size, [...L.nano, ...L.plug]).toFixed(1)} mm from the wall.`, 20, { fill: '#444' }) + T(CX, 878, `Straight runs: ${L.a} mm up, ${L.b.toFixed(1)} mm after the bend.`, 20, { fill: '#444' });
+});
+svg += T(W / 2, 930, 'Green = perfboard pieces (cut from your 5x7 board). Grey = stiff plug end. Black line = cable centre, bend radius 12.', 19, { fill: '#444' });
+svg += '</svg>';
+fs.writeFileSync(path.join(root, 'docs/images/fit-frames.svg'), svg);
+const r = spawnSync('rsvg-convert', ['-o', path.join(root, 'docs/images/fit-frames.png'), path.join(root, 'docs/images/fit-frames.svg')], { encoding: 'utf8' });
+console.log(r.status === 0 ? 'wrote docs/images/fit-frames.png' : r.stderr);
