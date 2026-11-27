@@ -124,3 +124,8 @@ Scaled against the Nano (43.18 mm long = 540 px). Estimates from a hand-held pho
 - Printed parts that do not change (checked: identical geometry): ring, pedestal, hub, display carrier, column. **base and front_plate both changed**; do not mix old and new ones.
 - The old U-turn solver (`scripts/usbc-layout.mjs`, `place-modules.mjs`, `place-all.mjs`) is obsolete.
 - **Plate posts moved:** the clearance check (`ghost-base`: HIT) showed the old bottom-left post inside the USB-C jack body at the new jack position. The four posts now stand in the corners of the left and right walls (22.5, 157.5, 202.5, 337.5 degrees), clear of both jacks. Because the plate now spans about 170 mm with posts only on two sides, the base has a **3 mm ledge all round the inside** under the plate edge (`plate_ledge_w`, `plate_ledge_h`). Not tested: how much the plate flexes when you tap the screen; the pedestal bonded to the plate stiffens the middle.
+
+## Base size versus cable turn angle (2026-11-27)
+
+- User found 180 mm large and asked about 130 or 140 mm. \`scripts/usbc-turn.mjs\` (cable and Nano piece only, flex designed at 72, 3 mm clearance) gives the smallest base per cable turn: 90 degrees **170 mm**, 105: 164, 120: 162, **135: 148**, 150: 152, 165: 144. A full wrap-around (180) is not solved by that script; the older U-turn solver gave 110 to 115 mm with about 1 mm of spare cable. So **130 or 140 mm cannot hold a 90 degree bend** with this cable. Picture: \`docs/images/size-compare.png\` (\`scripts/size-compare-svg.mjs\`).
+- Not tried: a square or rounded-rectangle base (the octagon's diagonal walls are what cut the L-shaped cable chain short), a shorter USB-C extension instead of the Neutrik fly-lead, or a right-angle plug on the Nano.
