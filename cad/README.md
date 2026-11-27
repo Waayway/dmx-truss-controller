@@ -9,7 +9,7 @@ Coordinates: z = 0 is the wall side (back of the base), +z points to the viewer.
 | `base.scad` | Octagon base, **115 mm across flats, 32 deep** | back plate on the bed | Two identical Neutrik D-size cutouts: **USB-C jack on the bottom facet, XLR on the right facet**. Four screw holes each (both diagonals, so either flange orientation fits) with M3 nut traps, four posts for perfboard strip A, four corner bosses, two keyholes |
 | `front_plate.scad` | Closes the base, carries the motor and pedestal | flat | 4 x M3 into the corner bosses, 3 x M1.6 for the motor, 3 x M2 pilot holes for the pedestal, motor-lead slot at 30 degrees |
 | `pedestal.scad` | Fixed 58 mm drum that hides the motor | open side up | 3 foot tabs, M2 screws from above |
-| `column.scad` | Fixed tube through the motor bore | upright | OD 5.6 / ID 4.0 for the display wires, 0.8 mm wall. Fragile: print it slow and expect to reprint |
+| `column.scad` | Fixed tube through the motor bore | upright | OD 5.5 (tested: 5.6 spins smoothly in the real motor, 5.7 binds) / ID 4.0 for the display wires, 0.75 mm wall. Fragile: print it slow and expect to reprint |
 | `display_carrier.scad` | Holds the Waveshare module | pocket up | Fixed, never turns. Socket for the column |
 | `rotor_hub.scad` | The turning link: motor to ring | flat | Glued to the motor; three walls that sit in ring pockets |
 | `ring.scad` | The ring you turn, 58 / 43 mm, 60 ribs | flat | 3 pockets for the hub walls, marker dot |

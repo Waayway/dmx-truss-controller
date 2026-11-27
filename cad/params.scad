@@ -41,6 +41,13 @@ motor_hole_pcd = 20.5;   // VERIFIED pitch circle
 motor_hole_thr = 1.6;    // VERIFIED thread M1.6 x 0.35, depth 6.0
 motor_poles    = 8;      // VERIFIED datasheet: 8 magnetic poles (SmartKnob firmware assumed 14)
 
+// ---------- fixed column through the motor bore ----------
+// USER TEST 2026-11-24 (five printed tubes OD 5.3 to 5.7 pushed into the real motor): 5.3, 5.4, 5.5 and 5.6 fit easily and spin
+// smoothly, 5.7 binds. The thickest smooth one is 5.6; the column is much longer than the test tubes, so it takes 0.1 mm off that.
+col_od         = 5.5;
+col_wall       = 0.75;   // PROPOSAL: thin; the user expects a tall 0.8 mm tube to snap when flexed, so keep the column short and held at both ends
+col_id         = col_od - 2 * col_wall;     // 4.0 for wires; NOT yet tested with the real wires
+
 // ---------- display: Waveshare 1.28in Touch LCD ----------
 disp_od        = 38.5;   // VERIFIED (Waveshare 2D drawing: lens OD 38.51)
 disp_glass     = 32.4;   // VERIFIED

@@ -6,8 +6,7 @@
 // The pedestal (58 mm) sits ON the plate and hides the motor.
 include <params.scad>
 
-col_od        = 11;        // outside diameter of the column that carries the display. PROPOSAL
-col_id        = 5.9 + 0.4; // inner hollow clears the 5.9 mm motor bore and the wire bundle. see column.scad
+plate_col_hole = 11 + 2 * fit;   // opening in the plate for the column foot cone; PROPOSAL
 
 module octagon(across_flats, h) {
     r = across_flats / 2 / cos(22.5);
@@ -19,7 +18,7 @@ module front_plate() {
     difference() {
         octagon(inner - 0.4, plate_t);                        // 0.4 mm running clearance in the base
         // central opening for the column + wires
-        translate([0, 0, -1]) cylinder(d = col_od + 2 * fit, h = plate_t + 2);
+        translate([0, 0, -1]) cylinder(d = plate_col_hole, h = plate_t + 2);
         // four screw holes at the diagonal corners (match front_bosses in the base)
         for (a = boss_angles)
             rotate([0, 0, a]) translate([boss_r, 0, -1])

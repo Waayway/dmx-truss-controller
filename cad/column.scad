@@ -6,10 +6,6 @@
 //   top   : mounts the display carrier (display_carrier.scad) with two M1.6 screws
 include <params.scad>
 
-col_clear   = 0.4;                         // radial running clearance 0.2 per side (PROPOSAL, tune on the printer)
-col_od      = motor_bore + 0.1 - col_clear; // 5.6
-col_wall    = 0.8;                         // two perimeters at 0.4 mm. PROPOSAL, thin: test print first
-col_id      = col_od - 2 * col_wall;       // 4.0
 foot_d      = 24;
 foot_t      = 3;
 // length: from the foot up through the stator, rotor and boss, plus the carrier seat

@@ -5,7 +5,6 @@
 // Print with the display pocket facing UP. Four tiny tabs hold the module; no screws on the glass.
 include <params.scad>
 
-col_od   = motor_bore + 0.1 - 0.4;
 pocket_d = disp_od + 0.4;            // PCB dia 38.5 + clearance
 carrier_d = pocket_d + 2.4;          // 1.2 mm rim
 boss_below = 4;                      // PROPOSAL

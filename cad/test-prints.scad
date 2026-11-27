@@ -14,18 +14,22 @@ module shafts() {
         }
 }
 
-// -------- 2. Brace test: MT6701 board mounting, 28 x 28 plate with the four M2 holes at 16.5 mm --------
-module brace_test() {
+// -------- 2. Brace test: MT6701 board mounting, 30 x 30 plate with the four M2 holes at 16.5 mm --------
+// The first version cut the pocket at exactly 22.0 mm for a 21.8 x 22.0 mm board and did not fit.
+// Two variants: pocket = board + 0.6 (brace) and board + 1.0 (brace_wide). Use the tighter one that drops in without force.
+module brace_test(clr) {
+    pocket = mt_board + clr;
     difference() {
-        translate([-14, -14, 0]) cube([28, 28, 3]);
-        translate([0, 0, -1]) cylinder(d = 8, h = 5, $fn = 40);            // centre opening for the wires
+        translate([-15, -15, 0]) cube([30, 30, 3.2]);
+        translate([0, 0, -1]) cylinder(d = 8, h = 6, $fn = 40);            // centre opening for the wires
         for (sx = [-1, 1], sy = [-1, 1])
-            translate([sx * mt_hole_pitch / 2, sy * mt_hole_pitch / 2, -1]) cylinder(d = 2.2, h = 5, $fn = 32);
-        translate([-mt_board / 2, -mt_board / 2, 3 - 1.6]) cube([mt_board, mt_board, 2]);   // board pocket (1.6 mm pcb)
+            translate([sx * mt_hole_pitch / 2, sy * mt_hole_pitch / 2, -1]) cylinder(d = 2.2, h = 6, $fn = 32);
+        translate([-pocket / 2, -pocket / 2, 3.2 - 1.6]) cube([pocket, pocket, 2]);   // board pocket, 1.6 mm deep
     }
 }
 
-// choose which one to export: -D part="shafts"|"brace"
+// choose which one to export: -D part="shafts"|"brace"|"brace_wide"
 part = "shafts";
 if (part == "shafts") shafts();
-if (part == "brace") brace_test();
+if (part == "brace") brace_test(0.6);
+if (part == "brace_wide") brace_test(1.0);
