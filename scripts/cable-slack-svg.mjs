@@ -1,0 +1,40 @@
+// One-picture explanation of the Neutrik USB-C cable slack. Numbers = cad/params.scad (usbj_stiff, cab_flex, plug_exposed, cab_bend_r) and the
+// "cable legs" line that assembly.scad echoes. usage: nix shell nixpkgs#librsvg -c node scripts/cable-slack-svg.mjs
+import fs from 'fs';
+import path from 'path';
+import { spawnSync } from 'child_process';
+const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const P = fs.readFileSync(path.join(root, 'cad/params.scad'), 'utf8');
+const num = n => +P.match(new RegExp('^' + n + '\\s*=\\s*([0-9.]+)', 'm'))[1];
+const stiff = num('usbj_stiff'), flex = num('cab_flex'), plug = num('plug_exposed') + 7, R = num('cab_bend_r');
+const arc = Math.PI * R, legA = 36.2404, spare = flex - legA - arc;     // legA from the assembly echo
+const W = 1500, H = 760, S = 8, X0 = 80, F = 'font-family="DejaVu Sans, Arial, sans-serif"';
+const t = (x, y, s, sz = 24, o = {}) => `<text x="${x}" y="${y}" ${F} font-size="${sz}" fill="${o.fill || '#111'}" font-weight="${o.b ? 700 : 400}" text-anchor="${o.a || 'middle'}">${s}</text>`;
+const bar = (x, y, mm, fill, label, sub, tc = '#fff') => `<rect x="${x}" y="${y}" width="${mm * S}" height="70" fill="${fill}" stroke="#222" stroke-width="3"/>` + t(x + mm * S / 2, y + 32, label, 24, { fill: tc, b: 1 }) + t(x + mm * S / 2, y + 58, sub, 20, { fill: tc });
+let s = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#fff"/>`;
+s += t(W / 2, 50, 'The Neutrik USB-C cable: why there is almost no spare length', 32, { b: 1 });
+s += t(X0, 120, '1. The cable you bought (end to end, to scale)', 24, { a: 'start', b: 1 });
+let x = X0;
+s += bar(x, 140, stiff, '#6b7280', `${stiff} mm STIFF`, 'jack body + strain relief'); x += stiff * S;
+s += bar(x, 140, flex, '#111', `${flex} mm FLEXIBLE`, 'the only part that can bend'); x += flex * S;
+s += bar(x, 140, plug, '#6b7280', `${plug} mm STIFF`, 'plug end'); 
+s += t(X0, 250, 'Sizes read from your photos (about plus or minus 3 mm). Only the black part can be bent.', 20, { a: 'start', fill: '#444' });
+s += t(X0, 320, '2. What the black part has to do inside the base', 24, { a: 'start', b: 1 });
+x = X0;
+const y2 = 340;
+s += bar(x, y2, legA, '#2563eb', `${legA.toFixed(0)} mm`, 'straight up'); x += legA * S;
+s += bar(x, y2, arc, '#d97706', `${arc.toFixed(0)} mm`, `U-turn (radius ${R})`); x += arc * S;
+s += bar(x, y2, Math.max(spare, 0.6), '#16a34a', '', ''); 
+s += t(x + spare * S + 14, y2 + 30, `${spare.toFixed(1)} mm spare`, 28, { a: 'start', fill: '#15803d', b: 1 });
+s += t(x + spare * S + 14, y2 + 58, '(this is the slack)', 20, { a: 'start', fill: '#15803d' });
+s += t(X0, y2 + 110, `${legA.toFixed(1)} + ${arc.toFixed(1)} + ${spare.toFixed(1)} = ${flex} mm. The U-turn cannot be tighter than radius ${R}: the cable ripples.`, 21, { a: 'start', fill: '#444' });
+s += t(X0, 530, '3. Why it matters', 24, { a: 'start', b: 1 });
+s += t(X0, 570, `- Only ${spare.toFixed(0)} mm spare, and the sizes are +-3 mm: the plug may not reach the Nano, or it will be forced into a tighter bend.`, 22, { a: 'start' });
+s += t(X0, 605, '- The stiff ends cannot bend, so a bigger base helps little (120 mm: about 3 mm spare, 125 mm: about 4 mm).', 22, { a: 'start' });
+s += t(X0, 640, '- Check: lay the real jack and cable in a 115 mm circle on paper and see if the plug reaches the Nano port.', 22, { a: 'start' });
+s += t(X0, 690, 'Fixes: a bigger base (125 mm), a shorter USB-C extension cable instead of the Neutrik, or plug straight into the Nano.', 22, { a: 'start', b: 1 });
+s += '</svg>';
+const svg = path.join(root, 'docs/images/cable-slack.svg');
+fs.writeFileSync(svg, s);
+const r = spawnSync('rsvg-convert', ['-o', path.join(root, 'docs/images/cable-slack.png'), svg], { encoding: 'utf8' });
+console.log(r.status === 0 ? 'wrote docs/images/cable-slack.png' : r.stderr);
