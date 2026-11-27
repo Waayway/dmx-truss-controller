@@ -26,6 +26,6 @@ module brace_test() {
 }
 
 // choose which one to export: -D part="shafts"|"brace"
-part = "guide";
+part = "shafts";
 if (part == "shafts") shafts();
 if (part == "brace") brace_test();
