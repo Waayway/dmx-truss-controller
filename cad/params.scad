@@ -8,7 +8,7 @@ $fn = 96;
 
 // ---------- base (octagon) ----------
 base_flat      = 115;    // across flats. 110 is the minimum that fits the USB-C fly-lead (see usbc-layout notes); PROPOSAL
-base_depth     = 32;     // z height. Neutrik D flange is 26 tall, plus room for the plate and floor   PROPOSAL
+base_depth     = 40;     // z height. USER: 32 was too low (0.85 mm between the MAX485 top and the sensor board, no room for wires). 40 gives about 4.9 mm. Everything else derives from this. PROPOSAL
 base_wall      = 2.5;    // wall thickness                                 PROPOSAL
 back_plate     = 2.5;    // back plate thickness                           PROPOSAL
 base_r_corner  = base_flat / 2 / cos(22.5);   // circumradius of the octagon
