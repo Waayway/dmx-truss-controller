@@ -1,5 +1,5 @@
 // TEST PRINTS (not final parts). Fast PETG prints to check fits on the real printer, before the full parts.
-// Print these three files. Each is small and quick.
+// Print these three files. Each is small and quick. (The clearance ring was dropped: test against the real motor instead.)
 include <params.scad>
 
 // column.scad defines these; repeated here so this file stands alone
@@ -15,16 +15,15 @@ module guide_tube() {
     }
 }
 
-// -------- 2. Clearance ring: slides over the guide tube, shows what turns easily and what binds --------
-// Five bores in one ring (a row of holes, each labelled by size) so one print tests five clearances at once.
-// Bores: 5.9 (tight), 6.1, 6.3, 6.5, 6.7 (loose), each 8 mm long, in a 20 x 40 x 10 block.
-module clearance_ring() {
-    sizes = [5.9, 6.1, 6.3, 6.5, 6.7];
-    difference() {
-        translate([-20, -10, 0]) cube([40, 20, 10]);
-        for (i = [0 : len(sizes) - 1])
-            translate([-16 + i * 8, 0, -1]) cylinder(d = sizes[i], h = 12, $fn = 48);
-    }
+// -------- 2. Short shafts: five loose tubes, push each into the REAL motor bore and spin the motor by hand --------
+// OD 5.3 / 5.4 / 5.5 / 5.6 / 5.7, ID 4.0, so the same print also checks the wire space.
+// The height tells them apart: 10 mm = OD 5.3, 11 mm = 5.4, 12 mm = 5.5, 13 mm = 5.6, 14 mm = 5.7. Print standing up, nothing joins them.
+module shafts() {
+    for (i = [0 : 4])
+        translate([i * 9, 0, 0]) difference() {
+            cylinder(d = 5.3 + i * 0.1, h = 10 + i, $fn = 64);
+            translate([0, 0, -1]) cylinder(d = 4.0, h = 20, $fn = 64);
+        }
 }
 
 // -------- 3. Brace test: MT6701 board mounting, 28 x 28 plate with the four M2 holes at 16.5 mm --------
@@ -38,8 +37,8 @@ module brace_test() {
     }
 }
 
-// choose which one to export: -D part="guide"|"ring"|"brace"
+// choose which one to export: -D part="guide"|"shafts"|"brace"
 part = "guide";
 if (part == "guide") guide_tube();
-if (part == "ring") clearance_ring();
+if (part == "shafts") shafts();
 if (part == "brace") brace_test();
