@@ -9,11 +9,10 @@ Coordinates: z = 0 is the wall side (back of the base), +z points to the viewer.
 | `base.scad` | Octagon base, **115 mm across flats, 32 deep** | back plate on the bed | Two identical Neutrik D-size cutouts: **USB-C jack on the bottom facet, XLR on the right facet**. Four screw holes each (both diagonals, so either flange orientation fits) with M3 nut traps, four posts for perfboard strip A, four corner bosses, two keyholes |
 | `front_plate.scad` | Closes the base, carries the motor and pedestal | flat | 4 x M3 into the corner bosses, 3 x M1.6 for the motor, 3 x M2 pilot holes for the pedestal, motor-lead slot at 30 degrees |
 | `pedestal.scad` | Fixed 58 mm drum that hides the motor | open side up | 3 foot tabs, M2 screws from above |
-| `column.scad` | Fixed tube through the motor bore | upright | OD 5.5 (tested: 5.6 spins smoothly in the real motor, 5.7 binds) / ID 4.0 for the display wires, 0.75 mm wall. Fragile: print it slow and expect to reprint |
+| `column.scad` | Fixed column + MT6701 sensor mount | foot on the bed, tube upright | OD 5.5 (tested in the real motor: 5.6 spins smoothly, 5.7 binds) / ID 4.0. The foot clamps to the motor with three M1.6 screws and carries the sensor board on its underside; the display wires leave in a groove over the chip. No root fillet (the magnet boss sits right above the foot). Fragile: print slow, expect to reprint |
 | `display_carrier.scad` | Holds the Waveshare module | pocket up | Fixed, never turns. Socket for the column |
 | `rotor_hub.scad` | The turning link: motor to ring | flat | Glued to the motor; three walls that sit in ring pockets |
 | `ring.scad` | The ring you turn, 58 / 43 mm, 60 ribs | flat | 3 pockets for the hub walls, marker dot |
-| `sensor_holder.scad` | Carrier for the 22 x 22 mm MT6701 board (4 x M2) | flat | **Placeholder, do not print**: where the magnet goes is not solved (see `docs/open-questions.md`) |
 | `lib.scad` | Helpers: perfboard outlines with sawn corners and their rim frames | n/a | Used by `base.scad` and `ghosts.scad` |
 | `ghosts.scad` | Render-only stand-ins: USB-C jack + fly-lead, Nano, XLR, MAX485, TMC6300, three perfboard pieces | not printed | Used by the clearance check and `layout-ghosts.stl` |
 | `assembly.scad` | All parts in place | n/a | Echoes the z-stack and asserts basic fit. `show_ghosts = true` adds the stand-ins |
@@ -40,5 +39,5 @@ The Neutrik USB-C jack has a 54 mm rigid body and a 17 cm fly-lead (about 75 mm 
 - The Nano's height above the perfboard (2.5 mm header spacer) is an estimate; the user's 15 mm measurement is ambiguous. Change `nano_hdr_h`.
 - The TMC6300 and MAX485 are placed (13 mm tall modules, user), each on its own perfboard piece with a rim frame; their pin layouts are not known.
 - **Cable slack is about 1 mm at 115 mm.** The USB-C fly-lead leaves almost no spare length in this base; see `docs/open-questions.md`. Check with the real jack on a 1:1 layout before printing.
-- The MT6701 sensor and its 4 mm magnet are **not solved**: the display column and wires occupy the motor axis where the magnet must sit. `sensor_holder.scad` only records the board dimensions.
+- **Sensor mount (2026-11-27):** the MT6701 board is screwed to the underside of the column foot, chip on the motor axis, 1.7 mm below the motor's own magnet boss (datasheet limit 2.0 mm). This rests on two numbers I could not verify: how far the boss sticks out below the screw face (`boss_proud`, datasheet says 2.2) and the motor orientation itself (boss and screw holes on one face). Measure `boss_proud` on the real motor before printing `column.stl`.
 - The 10 display wires through the 4.0 mm column bore: free area is enough on paper (12.6 mm2 vs about 9 mm2), but it has not been tried with the real cable.

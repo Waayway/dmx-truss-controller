@@ -53,8 +53,32 @@ module xlr_jack() {                        // on the RIGHT facet, body runs inwa
         cube([d_flange_t, d_flange_along, d_flange_z]);
 }
 
+// MT6701 board under the motor, as designed in column.scad: centred on the axis, header pads on the +y edge.
+// Small parts in the design frame (the photo frame turned 90 degrees clockwise): R1, R2 on the +x side, C1 at -x. Keepouts, not exact.
+module sensor_board() {
+    translate([0, 0, z_pcb_bot]) {
+        difference() {
+            translate([-mt_board / 2, -mt_board / 2, 0]) cube([mt_board, mt_board, mt_pcb_t]);
+            for (sx = [-1, 1], sy = [-1, 1]) translate([sx * mt_hole_pitch / 2, sy * mt_hole_pitch / 2, -1]) cylinder(d = mt_hole_d, h = mt_pcb_t + 2, $fn = 24);
+        }
+        translate([-mt_chip_x / 2, -mt_chip_y / 2, mt_pcb_t]) cube([mt_chip_x, mt_chip_y, chip_h]);
+        for (c = [[6, 1.9], [6, -0.7], [-5.5, 1.8]]) translate([c[0] - 1.2, c[1] - 1.2, mt_pcb_t]) cube([2.4, 2.4, 0.8]);
+    }
+}
+
+// the motor: stator face DOWN on the plate, magnet boss below it, flat rotor top above
+module motor() {
+    difference() {
+        union() {
+            translate([0, 0, z_motor_bot]) cylinder(d = motor_od, h = motor_body_h);
+            translate([0, 0, z_boss_bot]) cylinder(d = motor_boss_d, h = boss_proud + 0.01);
+        }
+        translate([0, 0, z_boss_bot - 1]) cylinder(d = motor_bore, h = motor_h + 2);
+    }
+}
+
 module ghosts() {
-    usbc_jack(); usbc_cable(); usbc_plug(); nano(); boardA(); boardB(); max485(); tmc6300(); xlr_jack();
+    usbc_jack(); usbc_cable(); usbc_plug(); nano(); boardA(); boardB(); max485(); tmc6300(); xlr_jack(); sensor_board();
 }
 
 ghosts();

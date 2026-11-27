@@ -29,6 +29,8 @@ module part(n) {
     if (n == "g_board")  { boardA(); boardB(); }
     if (n == "g_mods")   { max485(); tmc6300(); }
     if (n == "g_xlr")    xlr_jack();
+    if (n == "g_sensor") sensor_board();
+    if (n == "motor")    motor();
 }
 
 intersection() { part(a); part(b); }

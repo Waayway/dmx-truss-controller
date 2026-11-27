@@ -1,6 +1,6 @@
 .PHONY: all check clean
 OPENSCAD ?= openscad
-PARTS = base front_plate column display_carrier rotor_hub ring pedestal sensor_holder
+PARTS = base front_plate column display_carrier rotor_hub ring pedestal
 
 all: $(addprefix stl/,$(addsuffix .stl,$(PARTS))) stl/assembly-preview.stl stl/layout-ghosts.stl
 

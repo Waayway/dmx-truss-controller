@@ -7,8 +7,8 @@ Counts come from the CAD pilot and clearance holes. Lengths are my estimate (pla
 | Front plate to the 4 corner bosses of the base | M3 x 10, self-tapping | 4 | 3.4 clearance in plate, 2.4 pilot in boss |
 | XLR jack and Neutrik USB-C jack to the base wall | M3 x 8 plus M3 nut (the jacks may bring their own hardware; **not checked**) | 2 per jack | 3.2 holes on all four corners of the 19 x 24 pattern (only the two on one diagonal are used), hex nut traps on the inside |
 | Pedestal tabs into the front plate | M2 x 6, self-tapping | 3 | 2.4 clearance in tab, 1.7 pilot in plate (plate is only 2.5 mm: add a drop of glue, or use an M2 nut) |
-| Motor onto the front plate | M1.6 x 8 (length **unverified**) | 3 | 2.0 clearance in plate; the motor's own threads are M1.6 x 0.35 |
-| Sensor holder | M2 x 8 | 2 | 2.4 clearance |
+| Motor onto the front plate | M1.6 x 8 (length **unverified**) | 3 | Screws go UP from below: through the column foot (counterbored, tight 1.8 hole so the foot locates on the motor), the front plate (loose 2.4 hole) and into the motor's own M1.6 threads (6 deep). Foot web 1.85 + plate 2.5 = 4.35 mm, so an 8 mm screw has about 3.7 mm in the thread |
+| MT6701 board onto the column foot | M2 x 4, self-tapping | 2 | Into the two pilot holes on the +y side of the foot underside. Board thickness 1.6 + 2.4 mm into the foot; do not use a longer screw: the foot is 3.15 thick |
 | Wall mount (two keyholes side by side, 70 mm apart, 28 mm above centre) | pan-head screw, head under 7 mm, shank under 3.5 mm | 2 | keyhole 7 / 3.5 mm |
 
 Not screws:

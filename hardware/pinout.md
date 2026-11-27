@@ -23,6 +23,8 @@ The schematic image is in [`docs/images/schematic.png`](../docs/images/schematic
 
 The board has a 5-pin header (2.54 mm pitch) labelled, top to bottom in the user's photo: **VDD, GND, Analog/PWM, SCL, SDA** (read from the silkscreen; the chip is a MagnTek 6701, SOP8). Wire SDA to A4, SCL to A5 (same bus as the touch chip), VDD to 3V3, GND to GND; leave Analog/PWM unconnected. I2C address 0x06 per the plan; touch chip 0x15. Board: 22 x 22 mm, four holes about 2.1 mm on a 16.5 mm square, chip at the centre. The two 4.7 kohm pull-up resistors (R1, R2 marked 472) are already on the board.
 
+**Mounting (2026-11-27):** do not fit the header. Solder the four wires (VDD, GND, SCL, SDA) straight into the pads from the BACK of the board and cut them flush on the chip side: the chip side lies against the column foot, with only 0.9 mm of relief. Leave Analog/PWM empty.
+
 ## TMC6300 motor driver
 
 | TMC6300 pin | Connects to |

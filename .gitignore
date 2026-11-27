@@ -2,3 +2,4 @@
 .DS_Store
 /tmp/
 cad/stl/clearance-check.stl
+cad/stl/section*.stl

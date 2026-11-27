@@ -6,7 +6,7 @@
 // The pedestal (58 mm) sits ON the plate and hides the motor.
 include <params.scad>
 
-plate_col_hole = 11 + 2 * fit;   // opening in the plate for the column foot cone; PROPOSAL
+plate_boss_hole = motor_boss_d + 1.0;   // opening for the motor's magnet boss (Ø11.5) and the column; the motor is located by its screws, not by this hole
 
 module octagon(across_flats, h) {
     r = across_flats / 2 / cos(22.5);
@@ -18,20 +18,22 @@ module front_plate() {
     difference() {
         octagon(inner - 0.4, plate_t);                        // 0.4 mm running clearance in the base
         // central opening for the column + wires
-        translate([0, 0, -1]) cylinder(d = plate_col_hole, h = plate_t + 2);
+        translate([0, 0, -1]) cylinder(d = plate_boss_hole, h = plate_t + 2);
         // four screw holes at the diagonal corners (match front_bosses in the base)
         for (a = boss_angles)
             rotate([0, 0, a]) translate([boss_r, 0, -1])
                 cylinder(d = 3.4, h = plate_t + 2, $fn = 32);
-        // three M2 pilot holes for the pedestal tabs (match pedestal.scad: radius 21, angles 30/150/270)
-        for (a = [30, 150, 270])
+        // three M2 pilot holes for the pedestal tabs (match pedestal.scad: radius 21, angles 90/210/330, so the lead slot at 30 degrees stays free)
+        for (a = [90, 210, 330])
             rotate([0, 0, a]) translate([21, 0, -1]) cylinder(d = 1.7, h = plate_t + 2, $fn = 32);
-        // slot for the motor leads (3-pin 1.25 mm connector exits the side of the motor; position UNVERIFIED)
-        rotate([0, 0, 30]) translate([motor_od / 2 - 6, -5, -1]) cube([14, 10, plate_t + 2]);   // user: the lead leaves between two of the three screw holes (holes at 90/210/330 deg, so 30 deg is the midpoint)
+        // motor lead: it leaves the stator face between two screw holes (user), at 30 degrees. A 5 mm wide, 1.2 mm deep groove in the plate TOP
+        // carries it out from under the motor, then a through slot at radius 17..24 (outside the column foot, r 14.5) lets it drop into the base.
+        rotate([0, 0, 30]) translate([6, -2.5, plate_t - 1.2]) cube([14, 5, 2]);
+        rotate([0, 0, 30]) translate([17, -4, -1]) cube([7, 8, plate_t + 2]);
         // three M1.6 clearance holes on the 20.5 pitch circle (datasheet), 120 degrees apart
         for (i = [0 : motor_hole_n - 1])
             rotate([0, 0, i * 360 / motor_hole_n + 90]) translate([motor_hole_pcd / 2, 0, -1])
-                cylinder(d = motor_hole_thr + 0.4, h = plate_t + 2, $fn = 32);
+                cylinder(d = 2.4, h = plate_t + 2, $fn = 32);   // LOOSE: the foot, not the plate, locates the motor
     }
 }
 

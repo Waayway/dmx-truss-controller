@@ -8,7 +8,7 @@ include <params.scad>
 ped_wall   = 2.0;
 open_d     = pedestal_od - 2 * ped_wall - 4;     // top opening dia 50: hub walls (r 24.3) pass with 0.7 mm to spare
 tab_r      = 21;                                 // screw circle radius, inside the opening so a driver reaches it
-tab_angles = [30, 150, 270];
+tab_angles = [90, 210, 330];                  // the motor lead leaves at 30 degrees, between the tabs
 
 module pedestal() {
     difference() {

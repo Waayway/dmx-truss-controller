@@ -33,7 +33,7 @@ ring_gap       = 0.8;    // gap between pedestal top and ring              PROPO
 motor_od       = 32.0;   // VERIFIED rotor/body diameter
 motor_h        = 15.0;   // VERIFIED overall height
 motor_body_h   = 12.8;   // VERIFIED height of the rotor body without the boss
-motor_boss_d   = 11.5;   // VERIFIED raised boss on top of the rotor
+motor_boss_d   = 11.5;   // VERIFIED raised boss = the diametric ring magnet. It is on the STATOR face (see boss_proud below), NOT on top of the rotor
 motor_boss_h   = 2.2;    // VERIFIED (15.0 - 12.8)
 motor_bore     = 5.9;    // VERIFIED hollow shaft
 motor_hole_n   = 3;      // three M1.6 holes
@@ -47,6 +47,21 @@ motor_poles    = 8;      // VERIFIED datasheet: 8 magnetic poles (SmartKnob firm
 col_od         = 5.5;
 col_wall       = 0.75;   // PROPOSAL: thin; the user expects a tall 0.8 mm tube to snap when flexed, so keep the column short and held at both ends
 col_id         = col_od - 2 * col_wall;     // 4.0 for wires; NOT yet tested with the real wires
+
+// ---------- motor orientation and the sensor under it ----------
+// Orientation (2026-11-27): SmartKnob's photos of the SAME motor (SparkFun 20441, doc/img/motors in github.com/scottbez1/smartknob) show the
+// Ø11.5 ring magnet on the SAME face as the three M1.6 holes and the lead slot. That face is mounted DOWN on the plate; the rotor's other
+// face is flat with the bore bushing flush, and the hub goes on that one. The earlier CAD had the boss on top: that was wrong.
+// USER TO CONFIRM on the real motor: boss, three screw holes and lead slot on one face, the other face flat.
+boss_proud     = 2.2;    // how far the magnet boss sticks out below the screw face. DATASHEET: 15.0 total - 12.8 body. UNVERIFIED on the part: measure it.
+// MT6701 datasheet (Rev 1.5, magntek): air gap magnet to chip surface 0.5 min / 1.0 typ / 2.0 MAX mm; sensing centre within 0.3 mm of the magnet axis.
+sens_gap       = 1.7;    // PROPOSAL: boss bottom to chip top. Leaves 0.3 mm to the 2.0 mm maximum.
+chip_h         = 1.75;   // SOP-8 height above the board, datasheet maximum
+mt_pcb_t       = 1.6;    // ESTIMATE (not measured)
+mt_chip_x      = 6.0;    // SOP-8 across the leads (datasheet E = 5.8..6.2)
+mt_chip_y      = 4.9;    // SOP-8 body length (D = 4.7..5.1)
+wire_layer     = 0.5;    // the display wires lie flat in a groove over the chip: 30 AWG wire-wrap is about 0.5 mm
+hub_rim_depth  = 0.8;    // the rotor hub straddles the rotor's top edge by this much
 
 // ---------- display: Waveshare 1.28in Touch LCD ----------
 disp_od        = 38.5;   // VERIFIED (Waveshare 2D drawing: lens OD 38.51)
@@ -145,7 +160,7 @@ mt_board       = 22;     // board is 21.8 x 22.0 mm, chip dead centre
 mt_hole_pitch  = 16.5;   // four holes, about 2.1 mm, on a 16.5 mm square
 mt_hole_d      = 2.1;
 // pins along one edge, 2.54 pitch: VDD, GND, Analog/PWM, SCL, SDA
-// magnet that came with the sensor: 4 mm across (USER), 1.5 mm thick; assumed diametrically magnetised (cannot be tested). Where it sits is NOT designed.
+// magnet that came with the sensor: 4 mm across (USER), 1.5 mm thick. NOT USED: the motor has its own diametric ring magnet (boss_proud below). Spare.
 mt_magnet_d    = 4;
 mt_magnet_t    = 1.5;
 
@@ -164,7 +179,7 @@ plate_t        = 2.5;                              // front plate thickness
 z_plate_top    = base_depth;                       // the plate sits flush with the top of the wall
 z_motor_bot    = z_plate_top;                      // the stator sits ON the plate
 z_rotor_top    = z_motor_bot + motor_body_h;
-z_boss_top     = z_motor_bot + motor_h;
+z_boss_bot     = z_motor_bot - boss_proud;        // bottom of the magnet boss, inside the plate hole
 z_ped_bot      = z_plate_top;
 z_ped_top      = z_ped_bot + pedestal_h;
 z_ring_bot     = z_ped_top + ring_gap;
@@ -175,10 +190,15 @@ z_module_bot   = z_module_top - module_t;
 carrier_t      = 4;                                // carrier plate thickness
 pocket_h       = 2.2;                              // pocket depth for the module pcb
 z_carrier_bot  = z_module_bot + pocket_h - carrier_t;
-z_hub_bot      = z_boss_top - motor_boss_h;        // hub rests on the rotor top face
+z_hub_bot      = z_rotor_top - hub_rim_depth;      // hub straddles the rotor top edge
 hub_t          = 2.4;
 z_hub_top      = z_hub_bot + hub_t;
-col_foot_z     = z_plate_top - plate_t - 3;        // foot sits under the front plate, 3 mm foot
+z_chip_top     = z_boss_bot - sens_gap;            // sensor chip top face
+z_pcb_top      = z_chip_top - chip_h;              // sensor board top face = underside of the column foot
+z_pcb_bot      = z_pcb_top - mt_pcb_t;
+col_foot_z     = z_pcb_top;                        // foot underside rests on the sensor board
+foot_t         = (z_plate_top - plate_t) - col_foot_z;   // foot top is against the plate underside
+assert(plate_t - boss_proud >= 0.2, "the magnet boss would reach the foot: thicken the plate or lower boss_proud");
 col_top_z      = z_carrier_bot + (carrier_t - pocket_h) - 0.2;   // 0.2 mm below the pocket floor
 
 echo(str("base ", base_flat, " x ", base_depth, "  jack axis z=", jack_zc, "  perfboard underside z=", board_z, "  post_h=", post_h));
