@@ -1,4 +1,4 @@
-.PHONY: all check clean
+.PHONY: all check clean 3mf/ring-two-colour.3mf
 OPENSCAD ?= openscad
 PARTS = base front_plate column display_carrier rotor_hub ring pedestal
 
@@ -21,3 +21,9 @@ check:
 
 clean:
 	rm -f stl/*.stl
+
+# two-colour ring for Bambu Studio: ring body + knurl ribs as two parts of one object
+3mf/ring-two-colour.3mf: ring.scad params.scad
+	$(OPENSCAD) -D 'part="body"' -o stl/ring-body.stl ring.scad
+	$(OPENSCAD) -D 'part="ribs"' -o stl/ring-ribs.stl ring.scad
+	node ../scripts/make-3mf.mjs

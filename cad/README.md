@@ -12,7 +12,7 @@ Coordinates: z = 0 is the wall side (back of the base), +z points to the viewer.
 | `column.scad` | Fixed column + MT6701 sensor mount | foot on the bed, tube upright | OD 5.5 (tested in the real motor: 5.6 spins smoothly, 5.7 binds) / ID 4.0. The foot clamps to the motor with three M1.6 screws and carries the sensor board on its underside; the display wires leave in a groove over the chip. No root fillet (the magnet boss sits right above the foot). Fragile: print slow, expect to reprint |
 | `display_carrier.scad` | Holds the Waveshare module | pocket up | Fixed, never turns. Socket for the column |
 | `rotor_hub.scad` | The turning link: motor to ring | flat | Glued to the motor; three walls that sit in ring pockets |
-| `ring.scad` | The ring you turn, 58 / 43 mm, 60 ribs | flat | 3 pockets for the hub walls, marker dot |
+| `ring.scad` | The ring you turn, 58 / 43 mm, 60 ribs | flat | 3 pockets for the hub walls, marker dot. Two-colour version: `cad/3mf/ring-two-colour.3mf` (ring body + knurl ribs as two parts, ribs key 0.6 mm into the body); `make 3mf/ring-two-colour.3mf` rebuilds it. Each layer has both colours, so expect one filament change per layer (about 66 at 0.2 mm) |
 | `lib.scad` | Helpers: perfboard outlines with sawn corners and their rim frames | n/a | Used by `base.scad` and `ghosts.scad` |
 | `ghosts.scad` | Render-only stand-ins: USB-C jack + fly-lead, Nano, XLR, MAX485, TMC6300, three perfboard pieces | not printed | Used by the clearance check and `layout-ghosts.stl` |
 | `assembly.scad` | All parts in place | n/a | Echoes the z-stack and asserts basic fit. `show_ghosts = true` adds the stand-ins |
