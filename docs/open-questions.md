@@ -129,3 +129,10 @@ Scaled against the Nano (43.18 mm long = 540 px). Estimates from a hand-held pho
 
 - User found 180 mm large and asked about 130 or 140 mm. \`scripts/usbc-turn.mjs\` (cable and Nano piece only, flex designed at 72, 3 mm clearance) gives the smallest base per cable turn: 90 degrees **170 mm**, 105: 164, 120: 162, **135: 148**, 150: 152, 165: 144. A full wrap-around (180) is not solved by that script; the older U-turn solver gave 110 to 115 mm with about 1 mm of spare cable. So **130 or 140 mm cannot hold a 90 degree bend** with this cable. Picture: \`docs/images/size-compare.png\` (\`scripts/size-compare-svg.mjs\`).
 - Not tried: a square or rounded-rectangle base (the octagon's diagonal walls are what cut the L-shaped cable chain short), a shorter USB-C extension instead of the Neutrik fly-lead, or a right-angle plug on the Nano.
+
+## Fit-test frames (2026-11-27)
+
+- \`cad/fit-frame.scad\` prints a thin octagon ring at one base size with the jack hole, a ridge along the cable centreline, and outlines for the stiff jack end, the stiff plug end and the Nano's perfboard piece. Lay the real jack, cable and Nano on it. The asserts in the file stop the build if anything leaves the octagon or the cable is too short for the bend. Picture: \`docs/images/fit-frames.png\`.
+- **fit-170-90** (170 mm, 90 degree bend, flexible part 72 mm): 170 mm is the exact minimum from \`scripts/usbc-turn.mjs\`, so the Nano end is about 1 mm from the wall. The real base is 180.
+- **fit-140-145** (140 mm, 145 degree bend, flexible part **75 mm**, 2 mm clearances): only fits with the measured 75 mm flexible length (about 1.3 mm of room to the wall at the Nano end). With a 72 mm design length only turns of about 170 to 175 degrees fit at 140 mm, so a 140 mm base is a **near wrap-around**, not a gentle bend.
+- The frame test answers one question: does the real plug reach the Nano outline with the cable bent no tighter than radius 12 on the ridge line?

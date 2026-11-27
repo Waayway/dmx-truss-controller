@@ -46,3 +46,17 @@ for (const phiDeg of [90, 105, 120, 135, 150, 165, 180]) {
   console.log(`turn ${phiDeg} deg: ` + (min ? `min base ${min.F} mm (R=${min.R}, jack x=${min.jx.toFixed(0)}, a=${min.a}, b=${min.b.toFixed(0)})` : 'no layout up to 200 mm'));
   rows.push({ phiDeg, min });
 }
+
+// ---- detail mode: node scripts/usbc-turn.mjs 72 3 140   -> every turn angle that fits that base size, with the layout with the most room
+if (process.argv[4]) {
+  const F = +process.argv[4], jxMax = F * Math.tan(Math.PI / 8) / 2 - FLANGE_HALF;
+  const slackOf = L => Math.min(...[...L.nano, ...L.plug].map(([x, y]) => { const h = F / 2 - WALL - EDGE; return Math.min(h - Math.abs(x), h - Math.abs(y), (h * Math.SQRT2 - Math.abs(x) - Math.abs(y)) / Math.SQRT2); }));
+  for (let phiDeg = 90; phiDeg <= 200; phiDeg += 5) {
+    let best = null;
+    for (const R of [12, 13, 14, 15, 16]) for (const s of [-1, 1]) for (let jx = -jxMax; jx <= jxMax + 0.01; jx += 1) for (let a = 0; a <= FLEX; a += 1) {
+      const L = layout(F, jx, s, a, R, phiDeg); if (!L || !fits(F, L, jx)) continue;
+      const sc = slackOf(L); if (!best || sc > best.sc) best = { sc, R, s, jx, a, b: FLEX - a - R * phiDeg * Math.PI / 180, row: L.P2, h: L.h };
+    }
+    if (best) console.log(`F=${F} turn ${phiDeg}: fits. R=${best.R} side=${best.s > 0 ? '+x' : '-x'} jack x=${best.jx} a=${best.a} b=${best.b.toFixed(1)} wall slack ${best.sc.toFixed(1)}`);
+  }
+}
